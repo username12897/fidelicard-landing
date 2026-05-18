@@ -4,7 +4,12 @@
       "Bash(rd /s /q \"C:\\\\Users\\\\carru\\\\OneDrive\\\\Desktop\\\\SiteFidelicard\\\\fidelicard-landing\")",
       "Bash(rm -rf \"/mnt/c/Users/carru/OneDrive/Desktop/SiteFidelicard/fidelicard-landing\" && echo \"OK\")",
       "PowerShell(cmd.exe /c \"rd /s /q `\"C:\\\\Users\\\\carru\\\\OneDrive\\\\Desktop\\\\SiteFidelicard\\\\fidelicard-landing`\"\"; Write-Output \"Exit: $LASTEXITCODE\")",
-      "Bash(git -C \"C:/Users/carru/OneDrive/Desktop/SiteFidelicard\" status)"
+      "Bash(git -C \"C:/Users/carru/OneDrive/Desktop/SiteFidelicard\" status)",
+      "Bash(git add *)",
+      "Bash(git rm *)",
+      "Bash(git commit -m ' *)",
+      "Bash(gh auth *)",
+      "PowerShell(gh auth status 2>&1)"
     ]
   }
 }
