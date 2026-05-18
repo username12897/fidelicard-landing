@@ -9,7 +9,9 @@
       "Bash(git rm *)",
       "Bash(git commit -m ' *)",
       "Bash(gh auth *)",
-      "PowerShell(gh auth status 2>&1)"
+      "PowerShell(gh auth status 2>&1)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
     ]
   }
 }
