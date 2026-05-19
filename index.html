@@ -1310,31 +1310,31 @@ footer a:hover{color:var(--brand)}
   border-top:1px solid var(--line);
   border-bottom:1px solid var(--line);
   background:var(--paper);
-  padding:28px 0;
+  padding:14px 0;
   position:relative;
 }
 .marquee::before,.marquee::after{
-  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+  content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
 }
 .marquee::before{left:0;background:linear-gradient(90deg,var(--paper),transparent)}
 .marquee::after{right:0;background:linear-gradient(-90deg,var(--paper),transparent)}
 .marquee-track{
-  display:flex;gap:56px;white-space:nowrap;
+  display:flex;gap:36px;white-space:nowrap;
   animation:marqueeScroll 32s linear infinite;
   width:max-content;
 }
 .marquee-item{
   font-family:var(--display);
-  font-size:clamp(28px,4.5vw,56px);
+  font-size:clamp(18px,2.4vw,28px);
   font-weight:500;
-  letter-spacing:-.025em;
+  letter-spacing:-.02em;
   color:var(--ink);
-  display:inline-flex;align-items:center;gap:14px;
+  display:inline-flex;align-items:center;gap:9px;
 }
-.marquee-item .em{font-style:normal;font-size:.85em;opacity:.7}
+.marquee-item .em{font-style:normal;font-size:.92em;opacity:.85}
 .marquee-dot{
   font-family:var(--display);font-weight:500;
-  font-size:clamp(28px,4.5vw,56px);
+  font-size:clamp(18px,2.4vw,28px);
   color:var(--brand);
   display:inline-flex;align-items:center;
 }
@@ -2030,22 +2030,31 @@ footer a:hover{color:var(--brand)}
 
   // ---------- Split headlines into words (stagger reveal) ----------
   document.querySelectorAll('.hero h1, .section-head h2, .cta-box h2').forEach(el => {
+    let wordIdx = 0;
     const walk = (node) => {
       const kids = Array.from(node.childNodes);
       kids.forEach(child => {
         if (child.nodeType === 3) {
           const frag = document.createDocumentFragment();
-          child.textContent.split(/(\s+)/).forEach((word, i) => {
+          child.textContent.split(/(\s+)/).forEach(word => {
             if (!word.trim()) { frag.appendChild(document.createTextNode(word)); return; }
             const s = document.createElement('span');
             s.className = 'split-word';
-            s.style.transitionDelay = (i * 0.04) + 's';
+            s.style.transitionDelay = (wordIdx * 0.04) + 's';
             s.textContent = word;
+            wordIdx++;
             frag.appendChild(s);
           });
           node.replaceChild(frag, child);
         } else if (child.nodeType === 1 && !child.classList.contains('split-word')) {
-          walk(child);
+          // Preserve gradient/accent spans as single animated units (don't split inside)
+          if (child.classList.contains('grad') || child.classList.contains('accent')) {
+            child.classList.add('split-word');
+            child.style.transitionDelay = (wordIdx * 0.04) + 's';
+            wordIdx++;
+          } else {
+            walk(child);
+          }
         }
       });
     };
