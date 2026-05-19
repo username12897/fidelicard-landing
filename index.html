@@ -158,17 +158,7 @@ h1,h2,h3,h4,p{margin:0}
   position:relative;
   overflow:hidden;
 }
-/* Hero ambient gradient */
-.hero::before{
-  content:"";position:absolute;
-  left:50%;top:-200px;transform:translateX(-50%);
-  width:1100px;height:900px;
-  background:
-    radial-gradient(closest-side at 30% 40%, rgba(91,79,233,.32), transparent 70%),
-    radial-gradient(closest-side at 75% 60%, rgba(245,165,36,.18), transparent 70%);
-  filter:blur(40px);
-  z-index:0;pointer-events:none;
-}
+/* Hero ambient gradient — now handled by .hero-aurora */
 .hero::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background-image:
@@ -1230,14 +1220,140 @@ footer a:hover{color:var(--brand)}
 }
 
 /* =========================================================
-   Reveal
+   Reveal — blur + translate
    ========================================================= */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .85s ease, transform .85s cubic-bezier(.2,.6,.2,1)}
-.reveal.in{opacity:1;transform:none}
-.reveal.d1{transition-delay:.08s}
-.reveal.d2{transition-delay:.16s}
-.reveal.d3{transition-delay:.24s}
-.reveal.d4{transition-delay:.32s}
+.reveal{
+  opacity:0;transform:translateY(32px);filter:blur(14px);
+  transition:opacity .9s cubic-bezier(.2,.6,.2,1),
+             transform .9s cubic-bezier(.2,.6,.2,1),
+             filter .9s cubic-bezier(.2,.6,.2,1);
+}
+.reveal.in{opacity:1;transform:none;filter:blur(0)}
+.reveal.d1{transition-delay:.1s}
+.reveal.d2{transition-delay:.2s}
+.reveal.d3{transition-delay:.3s}
+.reveal.d4{transition-delay:.4s}
+
+/* Word stagger reveal — for headlines */
+.split-word{
+  display:inline-block;opacity:0;transform:translateY(18px);filter:blur(10px);
+  transition:opacity .8s cubic-bezier(.2,.6,.2,1),
+             transform .8s cubic-bezier(.2,.6,.2,1),
+             filter .8s cubic-bezier(.2,.6,.2,1);
+}
+.in .split-word,.split-word.in{opacity:1;transform:none;filter:blur(0)}
+
+/* =========================================================
+   Cursor blob
+   ========================================================= */
+.cursor-blob{
+  position:fixed;top:0;left:0;
+  width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle at center,rgba(91,79,233,.4) 0%,rgba(91,79,233,.18) 35%,rgba(91,79,233,0) 70%);
+  filter:blur(40px);
+  pointer-events:none;
+  z-index:1;
+  transform:translate(-50%,-50%);
+  will-change:transform;
+  opacity:0;transition:opacity .4s ease;
+}
+.cursor-blob.active{opacity:1}
+@media (max-width:880px),(pointer:coarse){.cursor-blob{display:none}}
+
+/* =========================================================
+   Grain texture overlay
+   ========================================================= */
+.grain-overlay{
+  position:fixed;inset:0;pointer-events:none;z-index:9999;
+  opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   Hero Aurora
+   ========================================================= */
+.hero-aurora{
+  position:absolute;inset:-20% -10% -10% -10%;
+  pointer-events:none;z-index:0;overflow:hidden;
+}
+.hero-aurora i{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);opacity:.7;
+  will-change:transform;
+}
+.hero-aurora .a1{
+  width:680px;height:680px;left:5%;top:-250px;
+  background:conic-gradient(from 0deg,rgba(91,79,233,.6),rgba(140,130,255,.3),rgba(245,165,36,.25),rgba(91,79,233,.6));
+  animation:auroraSpin 28s linear infinite;
+}
+.hero-aurora .a2{
+  width:520px;height:520px;right:5%;top:-100px;
+  background:conic-gradient(from 180deg,rgba(245,165,36,.35),rgba(91,79,233,.4),rgba(255,160,160,.2),rgba(245,165,36,.35));
+  animation:auroraSpin 36s linear infinite reverse;
+}
+.hero-aurora .a3{
+  width:420px;height:420px;left:38%;top:200px;
+  background:conic-gradient(from 90deg,rgba(52,211,153,.25),rgba(91,79,233,.3),rgba(140,130,255,.2),rgba(52,211,153,.25));
+  animation:auroraSpin 44s linear infinite;
+}
+@keyframes auroraSpin{
+  0%  {transform:rotate(0deg) scale(1)}
+  50% {transform:rotate(180deg) scale(1.1)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+
+/* =========================================================
+   Marquee infini
+   ========================================================= */
+.marquee{
+  overflow:hidden;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:var(--paper);
+  padding:28px 0;
+  position:relative;
+}
+.marquee::before,.marquee::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+}
+.marquee::before{left:0;background:linear-gradient(90deg,var(--paper),transparent)}
+.marquee::after{right:0;background:linear-gradient(-90deg,var(--paper),transparent)}
+.marquee-track{
+  display:flex;gap:56px;white-space:nowrap;
+  animation:marqueeScroll 32s linear infinite;
+  width:max-content;
+}
+.marquee-item{
+  font-family:var(--display);
+  font-size:clamp(28px,4.5vw,56px);
+  font-weight:500;
+  letter-spacing:-.025em;
+  color:var(--ink);
+  display:inline-flex;align-items:center;gap:14px;
+}
+.marquee-item .em{font-style:normal;font-size:.85em;opacity:.7}
+.marquee-dot{
+  font-family:var(--display);font-weight:500;
+  font-size:clamp(28px,4.5vw,56px);
+  color:var(--brand);
+  display:inline-flex;align-items:center;
+}
+@keyframes marqueeScroll{
+  from{transform:translateX(0)}
+  to  {transform:translateX(-50%)}
+}
+
+/* =========================================================
+   Card 3D tilt setup
+   ========================================================= */
+.feat,.how-card{
+  transform-style:preserve-3d;
+  transition:transform .25s cubic-bezier(.2,.6,.2,1), box-shadow .25s ease, border-color .25s ease;
+  will-change:transform;
+}
+.feat .feat-inner,.how-card .how-inner{
+  transform:translateZ(20px);
+}
 
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important;transition:none !important}
@@ -1326,6 +1442,12 @@ footer a:hover{color:var(--brand)}
 </head>
 <body>
 
+<!-- Cursor blob follower -->
+<div class="cursor-blob" aria-hidden="true"></div>
+
+<!-- Grain texture overlay -->
+<div class="grain-overlay" aria-hidden="true"></div>
+
 <!-- ====================== NAV ====================== -->
 <header class="nav">
   <div class="nav-inner">
@@ -1348,6 +1470,12 @@ footer a:hover{color:var(--brand)}
 
 <!-- ====================== HERO ====================== -->
 <section class="hero" id="top">
+  <!-- Aurora gradient layers -->
+  <div class="hero-aurora" aria-hidden="true">
+    <i class="a1"></i>
+    <i class="a2"></i>
+    <i class="a3"></i>
+  </div>
   <div class="hero-grid">
     <div>
       <h1 class="reveal d1">
@@ -1498,18 +1626,42 @@ footer a:hover{color:var(--brand)}
   </div>
 </section>
 
-<!-- ====================== TRUST BAND ====================== -->
-<div class="trustband">
-  <div class="wrap">
-    <div class="trustband-inner">
-      <span><b>Pensé pour :</b></span>
-      <span class="pill">☕ Cafés</span>
-      <span class="pill">🍝 Restaurants</span>
-      <span class="pill">✂ Salons</span>
-      <span class="pill">🥐 Boulangeries</span>
-      <span class="pill">🌷 Fleuristes</span>
-      <span class="pill">🛍 Boutiques</span>
-    </div>
+<!-- ====================== MARQUEE ====================== -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="em">☕</span>Cafés</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🍝</span>Restaurants</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">✂</span>Salons</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🥐</span>Boulangeries</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🌷</span>Fleuristes</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🛍</span>Boutiques</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🍷</span>Bars à vin</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🍦</span>Glaciers</span>
+    <span class="marquee-dot">·</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="marquee-item"><span class="em">☕</span>Cafés</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🍝</span>Restaurants</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">✂</span>Salons</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🥐</span>Boulangeries</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🌷</span>Fleuristes</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🛍</span>Boutiques</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🍷</span>Bars à vin</span>
+    <span class="marquee-dot">·</span>
+    <span class="marquee-item"><span class="em">🍦</span>Glaciers</span>
+    <span class="marquee-dot">·</span>
   </div>
 </div>
 
@@ -1873,13 +2025,113 @@ footer a:hover{color:var(--brand)}
 </footer>
 
 <script>
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+
+  // ---------- Split headlines into words (stagger reveal) ----------
+  document.querySelectorAll('.hero h1, .section-head h2, .cta-box h2').forEach(el => {
+    const walk = (node) => {
+      const kids = Array.from(node.childNodes);
+      kids.forEach(child => {
+        if (child.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          child.textContent.split(/(\s+)/).forEach((word, i) => {
+            if (!word.trim()) { frag.appendChild(document.createTextNode(word)); return; }
+            const s = document.createElement('span');
+            s.className = 'split-word';
+            s.style.transitionDelay = (i * 0.04) + 's';
+            s.textContent = word;
+            frag.appendChild(s);
+          });
+          node.replaceChild(frag, child);
+        } else if (child.nodeType === 1 && !child.classList.contains('split-word')) {
+          walk(child);
+        }
+      });
+    };
+    walk(el);
+  });
+
   // ---------- Reveal ----------
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        e.target.querySelectorAll('.split-word').forEach(w => w.classList.add('in'));
+        io.unobserve(e.target);
+      }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Also reveal split words in non-.reveal headlines (the hero h1 already has .reveal)
+  const splitIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.split-word').forEach(w => w.classList.add('in'));
+        splitIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.hero h1, .section-head h2, .cta-box h2').forEach(el => splitIO.observe(el));
+
+  // ---------- Cursor blob ----------
+  if (!isCoarse && !prefersReduced) {
+    const blob = document.querySelector('.cursor-blob');
+    if (blob) {
+      let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      let bx = mx, by = my;
+      let active = false;
+      window.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        if (!active) { active = true; blob.classList.add('active'); }
+      }, { passive: true });
+      window.addEventListener('mouseleave', () => { blob.classList.remove('active'); active = false; });
+      (function loop() {
+        bx += (mx - bx) * 0.12;
+        by += (my - by) * 0.12;
+        blob.style.transform = `translate(${bx}px, ${by}px) translate(-50%, -50%)`;
+        requestAnimationFrame(loop);
+      })();
+    }
+  }
+
+  // ---------- Card 3D tilt ----------
+  if (!isCoarse && !prefersReduced) {
+    const tiltCards = document.querySelectorAll('.feat, .how-card, .plan');
+    tiltCards.forEach(card => {
+      let rafId = null, tx = 0, ty = 0;
+      const apply = () => {
+        card.style.transform = `perspective(1100px) rotateY(${tx}deg) rotateX(${ty}deg) translateY(-3px)`;
+        rafId = null;
+      };
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        tx = px * 6; ty = -py * 6;
+        if (!rafId) rafId = requestAnimationFrame(apply);
+      }, { passive: true });
+      card.addEventListener('mouseleave', () => {
+        tx = 0; ty = 0;
+        card.style.transform = '';
+      });
+    });
+  }
+
+  // ---------- Magnetic buttons ----------
+  if (!isCoarse && !prefersReduced) {
+    const magBtns = document.querySelectorAll('.btn-brand, .btn-ink, .hero-ctas .btn');
+    magBtns.forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const r = btn.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width / 2;
+        const y = e.clientY - r.top - r.height / 2;
+        btn.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
+      }, { passive: true });
+      btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+    });
+  }
 
   // ---------- Build QR ----------
   (function(){
