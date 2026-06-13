@@ -1460,6 +1460,7 @@ footer a:hover{color:var(--brand)}
       <a href="#comment">Comment ça marche</a>
       <a href="#wallets">Wallets</a>
       <a href="#tarifs">Tarifs</a>
+      <a href="#faq">FAQ</a>
     </nav>
     <div class="nav-cta">
       <a class="btn btn-outline btn-sm" href="https://fidelicard-production.up.railway.app">Se connecter</a>
@@ -1958,6 +1959,63 @@ footer a:hover{color:var(--brand)}
           <a class="btn btn-brand" href="https://fidelicard-production.up.railway.app">Choisir l'annuel <span class="arr">→</span></a>
         </div>
       </article>
+    </div>
+
+    <div class="reveal" style="margin-top:30px;text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--muted);display:flex;gap:10px 20px;justify-content:center;flex-wrap:wrap">
+      <span>✓ Sans engagement</span>
+      <span>✓ Annulez à tout moment</span>
+      <span>✓ Paiement sécurisé via Stripe</span>
+      <span>✓ Conforme RGPD · hébergé en UE</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq{padding:clamp(60px,8vw,110px) 0;background:var(--bg)}
+  .faq-list{max-width:820px;margin:44px auto 0;display:flex;flex-direction:column;gap:12px}
+  .faq-item{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:0 24px;transition:border-color .2s ease}
+  .faq-item[open]{border-color:rgba(91,79,233,.35)}
+  .faq-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:21px 0;font-family:var(--display);font-weight:600;font-size:clamp(15px,1.6vw,18px);color:var(--ink)}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-ic{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-size:19px;line-height:1;transition:transform .25s ease}
+  .faq-item[open] .faq-ic{transform:rotate(45deg)}
+  .faq-a{color:var(--muted);font-size:15px;line-height:1.66;padding:0 0 23px;max-width:700px}
+</style>
+<!-- ====================== FAQ ====================== -->
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>05 · Questions</span>
+      </div>
+      <h2>Les réponses, <span class="accent">avant</span> vos questions.</h2>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item reveal">
+        <summary>Mes clients doivent-ils installer une application&nbsp;?<span class="faq-ic">+</span></summary>
+        <div class="faq-a">Non. La carte s'ajoute à Apple Wallet ou Google Wallet en un tap, ou s'ouvre via un simple lien. Aucune application à télécharger côté client.</div>
+      </details>
+      <details class="faq-item reveal">
+        <summary>Comment fonctionne l'anti-fraude&nbsp;?<span class="faq-ic">+</span></summary>
+        <div class="faq-a">Chaque client dispose d'un QR code unique qui se régénère toutes les 30 secondes (TOTP), à usage unique, avec un délai minimum entre deux scans. Une capture d'écran devient inutilisable : impossible à copier ou à rejouer.</div>
+      </details>
+      <details class="faq-item reveal">
+        <summary>Puis-je modifier mes récompenses après le lancement&nbsp;?<span class="faq-ic">+</span></summary>
+        <div class="faq-a">Oui, à tout moment depuis votre tableau de bord. Les changements (récompense, nombre de tampons, paliers de points, design) s'appliquent instantanément à toutes les cartes de vos clients — sans perdre leur progression.</div>
+      </details>
+      <details class="faq-item reveal">
+        <summary>Comment se passe le paiement&nbsp;?<span class="faq-ic">+</span></summary>
+        <div class="faq-a">Paiement sécurisé par carte via Stripe. Formule mensuelle sans engagement ou annuelle avantageuse, résiliable quand vous le souhaitez. Vos factures sont disponibles dans votre espace.</div>
+      </details>
+      <details class="faq-item reveal">
+        <summary>Mes données et celles de mes clients sont-elles protégées&nbsp;?<span class="faq-ic">+</span></summary>
+        <div class="faq-a">Oui. Hébergement en Europe, conformité RGPD, et export ou suppression des données possibles à la demande directement depuis l'interface.</div>
+      </details>
+      <details class="faq-item reveal">
+        <summary>Combien de temps pour démarrer&nbsp;?<span class="faq-ic">+</span></summary>
+        <div class="faq-a">Environ 10 minutes : créez votre carte, partagez le lien ou le QR à vos clients, et scannez dès la première visite. Aucune carte bancaire requise pour configurer.</div>
+      </details>
     </div>
   </div>
 </section>
