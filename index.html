@@ -46,10 +46,7 @@
   html{ scroll-behavior:smooth; }
   body{
     font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
-    background:
-      radial-gradient(120% 90% at 80% -10%, #EDE7F8 0%, transparent 55%),
-      radial-gradient(120% 90% at 0% 0%, #E9E3F6 0%, transparent 50%),
-      #F5F3FB;
+    background:#F5F3FB;
     color:#1E1B2E; -webkit-font-smoothing:antialiased; overflow-x:hidden;
   }
   ::selection{ background:#6C5CE7; color:#fff; }
@@ -103,14 +100,9 @@
   .arr{ display:inline-block; transition:transform .3s ease; } a:hover .arr,.btn:hover .arr{ transform:translateX(3px); }
   .btn{ transition:transform .3s cubic-bezier(.16,.7,.2,1), background .3s, box-shadow .3s, border-color .3s; }
 
-  /* ---------- Peps : blobs colorés, lueurs, dégradé animé ---------- */
-  .blob{ position:absolute; border-radius:50%; filter:blur(64px); pointer-events:none; will-change:transform; z-index:-1; }
-  .blob-a{ background:radial-gradient(closest-side, rgba(139,124,240,.55), transparent 70%); animation:drift 18s ease-in-out infinite; }
-  .blob-b{ background:radial-gradient(closest-side, rgba(185,168,255,.50), transparent 70%); animation:drift 24s ease-in-out infinite reverse; }
-  .blob-c{ background:radial-gradient(closest-side, rgba(108,92,231,.40), transparent 70%); animation:drift 30s ease-in-out infinite; }
-  @keyframes drift{ 0%,100%{ transform:translate(0,0) scale(1) } 33%{ transform:translate(38px,-28px) scale(1.12) } 66%{ transform:translate(-28px,32px) scale(.92) } }
-  .grad-anim{ background:linear-gradient(90deg,#6C5CE7,#8B7CF0,#C9B8FF,#8B7CF0,#6C5CE7); background-size:300% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; animation:gradmove 7s linear infinite; }
-  @keyframes gradmove{ to{ background-position:-300% 0 } }
+  /* ---------- Cartes : tilt 3D au survol ---------- */
+  .card-3d{ transform-style:preserve-3d; will-change:transform; }
+  .card-3d:hover{ box-shadow:0 38px 72px -34px rgba(76,68,138,.42); }
 
   @media (max-width:980px){ .phone{ width:264px; height:536px } }
   @media (prefers-reduced-motion: reduce){ *{ animation:none !important } .reveal{ opacity:1 !important; transform:none !important } .phone-tilt{ transform:none !important } }
@@ -141,11 +133,6 @@
 
 <!-- ============================== HERO ============================== -->
 <section id="top" class="relative mx-auto max-w-content px-6 pb-24 pt-16 md:pt-24">
-  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-    <div class="blob blob-a" style="width:440px;height:440px;left:-10%;top:-6%"></div>
-    <div class="blob blob-b" style="width:380px;height:380px;right:-8%;top:22%"></div>
-    <div class="blob blob-c" style="width:320px;height:320px;left:32%;bottom:-12%"></div>
-  </div>
   <div class="grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
     <!-- Texte -->
     <div class="relative z-10">
@@ -153,14 +140,14 @@
         <span class="h-1.5 w-1.5 rounded-full bg-violet"></span> Fidélité · wallet natif
       </span>
       <h1 class="reveal font-display mt-6 text-[clamp(3rem,7vw,5.6rem)] font-semibold leading-[0.96]" data-d="1">
-        La fidélité,<br />native dans<br />le <span class="grad-anim">téléphone.</span>
+        La fidélité,<br />native dans<br />le <span class="bg-gradient-to-r from-violet to-violet-soft bg-clip-text text-transparent">téléphone.</span>
       </h1>
       <p class="reveal mt-7 max-w-md text-lg leading-relaxed text-muted" data-d="2">
         Vos cartes de fidélité vivent dans Apple&nbsp;Wallet et Google&nbsp;Wallet. Sans application,
         sans papier, avec un QR anti-fraude qui change toutes les 30&nbsp;secondes.
       </p>
       <div class="reveal mt-9 flex flex-wrap items-center gap-3" data-d="3">
-        <a href="#tarifs" class="btn group inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-violet to-violet-soft px-7 py-4 text-base font-medium text-white shadow-orb hover:-translate-y-0.5 hover:from-violet-deep hover:to-violet">Lancer ma carte <span class="arr">→</span></a>
+        <a href="#tarifs" class="btn group inline-flex items-center gap-2.5 rounded-full bg-violet px-7 py-4 text-base font-medium text-white shadow-orb hover:-translate-y-0.5 hover:bg-violet-deep">Lancer ma carte <span class="arr">→</span></a>
         <a href="#produit" class="btn inline-flex items-center gap-2 rounded-full border bg-white/60 px-7 py-4 text-base font-medium text-ink backdrop-blur hover:border-ink/20">Voir la démo</a>
       </div>
       <div class="reveal mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted" data-d="4">
@@ -170,8 +157,6 @@
 
     <!-- Scène 3D -->
     <div class="scene relative mx-auto h-[600px] w-full max-w-[460px]" id="scene" aria-hidden="true">
-      <!-- halo derrière le téléphone -->
-      <div class="pointer-events-none absolute left-1/2 top-1/2 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full" style="background:radial-gradient(closest-side, rgba(108,92,231,.42), transparent 70%); filter:blur(40px); z-index:-1"></div>
       <!-- bille mascotte -->
       <div class="orb" style="position:absolute; width:88px; height:88px; right:2%; top:4%; z-index:3"></div>
       <div class="orb" style="position:absolute; width:40px; height:40px; left:0%; bottom:18%; z-index:3; animation-delay:1.2s"></div>
@@ -192,9 +177,9 @@
                   <div class="flex items-start justify-between">
                     <div>
                       <div class="text-[10px] uppercase tracking-[0.16em] text-white/60">Café · Bruxelles</div>
-                      <div class="font-display text-lg font-semibold">Café Lumière</div>
+                      <div class="font-display text-lg font-semibold">Votre Café</div>
                     </div>
-                    <div class="grid h-9 w-9 place-items-center rounded-lg bg-white/95 text-sm font-bold text-violet">L</div>
+                    <div class="grid h-9 w-9 place-items-center rounded-lg bg-white/95 text-sm font-bold text-violet">V</div>
                   </div>
                   <div class="mt-5 text-[10px] uppercase tracking-[0.14em] text-white/70">7 / 10 tampons</div>
                   <div class="mt-2 grid grid-cols-5 gap-2">
@@ -210,7 +195,7 @@
                 <!-- 2e carte (aperçu) -->
                 <div class="mt-3 rounded-3xl bg-gradient-to-br from-[#2b2740] to-[#16131f] p-4 text-white/90">
                   <div class="flex items-center justify-between">
-                    <div class="font-display text-sm font-semibold">Atelier Éline</div>
+                    <div class="font-display text-sm font-semibold">Votre Salon</div>
                     <div class="text-[10px] text-white/50">Salon · Liège</div>
                   </div>
                   <div class="mt-2 font-display text-2xl font-semibold text-violet-soft">1 240<span class="ml-1 text-xs font-normal text-white/60">pts</span></div>
@@ -220,7 +205,7 @@
               <!-- notification -->
               <div class="absolute inset-x-4 bottom-5 flex items-center gap-3 rounded-2xl border border-white/40 bg-white/85 p-3 backdrop-blur">
                 <div class="grid h-9 w-9 place-items-center rounded-xl bg-violet text-sm font-bold text-white">+1</div>
-                <div class="text-[12px] leading-tight"><div class="font-semibold text-ink">+1 tampon ajouté</div><div class="text-muted">à l'instant · Café Lumière</div></div>
+                <div class="text-[12px] leading-tight"><div class="font-semibold text-ink">+1 tampon ajouté</div><div class="text-muted">à l'instant · Votre Café</div></div>
               </div>
             </div>
           </div>
@@ -250,8 +235,7 @@
 </div>
 
 <!-- ============================== FONCTIONNALITÉS (app showcase) ============================== -->
-<section id="produit" class="relative mx-auto max-w-content px-6 py-24 md:py-32">
-  <div class="orb" style="position:absolute; width:54px; height:54px; right:3%; top:7%; z-index:5" aria-hidden="true"></div>
+<section id="produit" class="mx-auto max-w-content px-6 py-24 md:py-32">
   <div class="reveal mx-auto mb-20 max-w-2xl text-center">
     <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">Le produit</span>
     <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Pensé pour le téléphone. D'abord.</h2>
@@ -266,18 +250,18 @@
       <p class="mt-4 max-w-md text-lg leading-relaxed text-muted">Vos clients ajoutent la carte en un tap. Notifications natives, mise à jour automatique des tampons, aucune application tierce à installer.</p>
     </div>
     <div class="reveal" data-d="1">
-      <div class="rounded-[32px] border bg-white/70 p-8 shadow-soft backdrop-blur">
+      <div class="card-3d rounded-[32px] border bg-white/70 p-8 shadow-soft backdrop-blur">
         <div class="flex gap-4">
           <div class="flex-1 rounded-2xl bg-gradient-to-br from-violet to-[#4A3FB8] p-4 text-white">
             <div class="text-[10px] uppercase tracking-wide text-white/60">Apple Wallet</div>
-            <div class="font-display mt-1 font-semibold">Café Lumière</div>
+            <div class="font-display mt-1 font-semibold">Votre Café</div>
             <div class="mt-4 grid grid-cols-5 gap-1.5">
               <i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp !border-white/40"></i><i class="stamp !border-white/40"></i><i class="stamp !border-white/40"></i>
             </div>
           </div>
           <div class="flex-1 rounded-2xl bg-gradient-to-br from-[#2b2740] to-[#16131f] p-4 text-white">
             <div class="text-[10px] uppercase tracking-wide text-white/50">Google Wallet</div>
-            <div class="font-display mt-1 font-semibold">Atelier Éline</div>
+            <div class="font-display mt-1 font-semibold">Votre Salon</div>
             <div class="font-display mt-6 text-3xl font-semibold text-violet-soft">1 240<span class="ml-1 text-xs font-normal text-white/60">pts</span></div>
           </div>
         </div>
@@ -288,7 +272,7 @@
   <!-- rangée 2 (inversée) -->
   <div class="mt-16 grid items-center gap-12 lg:grid-cols-2">
     <div class="reveal order-2 lg:order-1" data-d="1">
-      <div class="rounded-[32px] border bg-white/70 p-8 shadow-soft backdrop-blur">
+      <div class="card-3d rounded-[32px] border bg-white/70 p-8 shadow-soft backdrop-blur">
         <div class="flex items-center justify-between rounded-2xl bg-ink p-6 text-white">
           <div>
             <div class="text-[10px] uppercase tracking-[0.16em] text-white/50">Code à usage unique</div>
@@ -311,15 +295,15 @@
 
   <!-- petite grille -->
   <div class="mt-20 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-    <div class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur">
+    <div class="reveal card-3d rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur">
       <h4 class="font-display text-xl font-semibold">Tampons ou points</h4>
       <p class="mt-2 text-muted">10 tampons → 1 offert, ou cumul de points. Basculez quand vous voulez.</p>
     </div>
-    <div class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="1">
+    <div class="reveal card-3d rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="1">
       <h4 class="font-display text-xl font-semibold">Comptoir en poche</h4>
       <p class="mt-2 text-muted">Scannez depuis un téléphone ou une tablette. Installation en un clic, scan hors-ligne.</p>
     </div>
-    <div class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="2">
+    <div class="reveal card-3d rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="2">
       <h4 class="font-display text-xl font-semibold">Conçu en Belgique</h4>
       <p class="mt-2 text-muted">Équipe belge, en français. RGPD, hébergé en Europe, données en Europe.</p>
     </div>
@@ -327,25 +311,24 @@
 </section>
 
 <!-- ============================== COMMENT ============================== -->
-<section id="fonctionnalites" class="relative overflow-hidden border-y bg-white/50 px-6 py-24 md:py-32">
-  <div class="blob blob-c" style="width:380px;height:380px;left:-6%;top:-12%" aria-hidden="true"></div>
+<section id="fonctionnalites" class="border-y bg-white/50 px-6 py-24 md:py-32">
   <div class="mx-auto max-w-content">
     <div class="reveal mx-auto mb-16 max-w-2xl text-center">
       <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">En route</span>
       <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Lancée en un après-midi.</h2>
     </div>
     <div class="grid gap-6 md:grid-cols-3">
-      <div class="reveal rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur">
+      <div class="reveal card-3d rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur">
         <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-violet font-display font-semibold text-white">1</div>
         <h3 class="font-display mt-5 text-xl font-semibold">Vous créez la carte</h3>
         <p class="mt-2 text-muted">Logo, couleurs, règle de fidélité. Aperçu en direct. 10 minutes, sans CB.</p>
       </div>
-      <div class="reveal rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur" data-d="1">
+      <div class="reveal card-3d rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur" data-d="1">
         <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-violet font-display font-semibold text-white">2</div>
         <h3 class="font-display mt-5 text-xl font-semibold">Vos clients l'ajoutent</h3>
         <p class="mt-2 text-muted">Un QR ou un lien. Un tap, et la carte vit dans le Wallet. Aucune appli.</p>
       </div>
-      <div class="reveal rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur" data-d="2">
+      <div class="reveal card-3d rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur" data-d="2">
         <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-violet font-display font-semibold text-white">3</div>
         <h3 class="font-display mt-5 text-xl font-semibold">Vous scannez, ils reviennent</h3>
         <p class="mt-2 text-muted">D'un scan au comptoir. Notification wallet à l'approche de la récompense.</p>
@@ -354,39 +337,58 @@
   </div>
 </section>
 
-<!-- ============================== AVIS (minimal) ============================== -->
-<section class="mx-auto max-w-content px-6 py-24 md:py-32">
+<!-- ============================== AVANTAGES / À SAVOIR ============================== -->
+<section id="avantages" class="mx-auto max-w-content px-6 py-24 md:py-32">
   <div class="reveal mx-auto mb-14 max-w-2xl text-center">
-    <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">Ils nous font confiance</span>
-    <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Des commerçants comme vous.</h2>
+    <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">En toute transparence</span>
+    <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Les avantages, et ce qu'il faut savoir.</h2>
+    <p class="mt-5 text-lg text-muted">Pas de faux avis ici : juste les vrais points forts, et les limites en toute honnêteté.</p>
   </div>
-  <div class="grid gap-6 md:grid-cols-3">
-    <figure class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur">
-      <blockquote class="text-lg leading-relaxed text-ink2">« Fini les cartes en carton qui finissent à la machine à laver. Mes habitués adorent. »</blockquote>
-      <figcaption class="mt-5 flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-violet font-semibold text-white">C</span><span><span class="block font-semibold">Camille</span><span class="block text-sm text-muted">Café Lumière · Bruxelles</span></span></figcaption>
-    </figure>
-    <figure class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="1">
-      <blockquote class="text-lg leading-relaxed text-ink2">« Installé entre deux fournées. Le soir même, trois clients avaient leur carte. Rien à expliquer. »</blockquote>
-      <figcaption class="mt-5 flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-ink font-semibold text-white">M</span><span><span class="block font-semibold">Mehdi</span><span class="block text-sm text-muted">Pain &amp; Co · Namur</span></span></figcaption>
-    </figure>
-    <figure class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="2">
-      <blockquote class="text-lg leading-relaxed text-ink2">« Je voulais un truc qui me ressemble, pas une appli froide. Mes couleurs, mon logo. »</blockquote>
-      <figcaption class="mt-5 flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-violet-soft font-semibold text-white">É</span><span><span class="block font-semibold">Élise</span><span class="block text-sm text-muted">Atelier Éline · Liège</span></span></figcaption>
-    </figure>
+
+  <div class="grid gap-6 md:grid-cols-2">
+    <!-- Avantages -->
+    <div class="reveal rounded-[32px] border bg-white/70 p-9 shadow-soft backdrop-blur">
+      <div class="flex items-center gap-3">
+        <span class="grid h-11 w-11 place-items-center rounded-full bg-emerald-500/10 text-lg font-semibold text-emerald-600">✓</span>
+        <h3 class="font-display text-2xl font-semibold">Les avantages</h3>
+      </div>
+      <ul class="mt-7 flex flex-col gap-4 text-[15px] leading-relaxed">
+        <li class="flex gap-3"><span class="mt-0.5 shrink-0 font-semibold text-emerald-600">✓</span><span><strong>Zéro application</strong> : la carte s'ajoute à Apple &amp; Google Wallet en un tap.</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 shrink-0 font-semibold text-emerald-600">✓</span><span><strong>Mise à jour automatique</strong> : tampons et points se synchronisent tout seuls.</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 shrink-0 font-semibold text-emerald-600">✓</span><span><strong>Anti-fraude</strong> : un QR dynamique qui change toutes les 30 secondes.</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 shrink-0 font-semibold text-emerald-600">✓</span><span><strong>Lancé en ~10 min</strong>, sans carte bancaire pour tester.</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 shrink-0 font-semibold text-emerald-600">✓</span><span><strong>À votre image</strong> : logo, couleurs, tampons ou points.</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 shrink-0 font-semibold text-emerald-600">✓</span><span><strong>Notifications natives</strong> quand la récompense approche.</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 shrink-0 font-semibold text-emerald-600">✓</span><span><strong>RGPD &amp; hébergé en Europe</strong>, support en français.</span></li>
+      </ul>
+    </div>
+
+    <!-- À savoir -->
+    <div class="reveal rounded-[32px] border bg-white/70 p-9 shadow-soft backdrop-blur" data-d="1">
+      <div class="flex items-center gap-3">
+        <span class="grid h-11 w-11 place-items-center rounded-full bg-ink/5 text-lg font-semibold text-ink">!</span>
+        <h3 class="font-display text-2xl font-semibold">À savoir avant de se lancer</h3>
+      </div>
+      <ul class="mt-7 flex flex-col gap-4 text-[15px] leading-relaxed text-ink2">
+        <li class="flex gap-3"><span class="mt-2.5 h-0.5 w-3 shrink-0 rounded bg-muted"></span><span>C'est un <strong>abonnement</strong> : 29,99€/mois, ou 299,99€/an (création offerte).</span></li>
+        <li class="flex gap-3"><span class="mt-2.5 h-0.5 w-3 shrink-0 rounded bg-muted"></span><span>Vos clients ont besoin d'un <strong>smartphone compatible Wallet</strong> (assez récent).</span></li>
+        <li class="flex gap-3"><span class="mt-2.5 h-0.5 w-3 shrink-0 rounded bg-muted"></span><span>Une <strong>connexion internet</strong> est nécessaire pour ajouter la carte (le scan, lui, marche hors-ligne).</span></li>
+        <li class="flex gap-3"><span class="mt-2.5 h-0.5 w-3 shrink-0 rounded bg-muted"></span><span><strong>Pas de carte physique</strong> : certains habitués y sont encore attachés.</span></li>
+        <li class="flex gap-3"><span class="mt-2.5 h-0.5 w-3 shrink-0 rounded bg-muted"></span><span>C'est un <strong>service en ligne</strong> : vous en dépendez (mais export &amp; suppression RGPD à tout moment).</span></li>
+      </ul>
+    </div>
   </div>
-  <p class="reveal mx-auto mt-8 max-w-2xl text-center text-sm text-faint">Avis d'exemple le temps de récolter les vôtres : on préfère attendre vos vrais mots plutôt que d'en inventer. L'équipe FidéliCard</p>
 </section>
 
 <!-- ============================== TARIFS ============================== -->
-<section id="tarifs" class="relative overflow-hidden border-y bg-white/50 px-6 py-24 md:py-32">
-  <div class="blob blob-b" style="width:420px;height:420px;right:-8%;bottom:-14%" aria-hidden="true"></div>
+<section id="tarifs" class="border-y bg-white/50 px-6 py-24 md:py-32">
   <div class="mx-auto max-w-content">
     <div class="reveal mx-auto mb-14 max-w-2xl text-center">
       <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">Tarifs</span>
       <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Deux formules. Pas de surprise.</h2>
     </div>
     <div class="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
-      <article class="reveal flex flex-col gap-6 rounded-[32px] border bg-white/80 p-9 shadow-soft backdrop-blur">
+      <article class="reveal flex flex-col gap-6 card-3d rounded-[32px] border bg-white/80 p-9 shadow-soft backdrop-blur">
         <div><span class="text-sm font-medium uppercase tracking-wide text-muted">Mensuel</span><h3 class="font-display mt-1 text-2xl font-semibold">Sans engagement</h3></div>
         <div class="flex items-baseline gap-1 border-t pt-6 font-display"><span class="text-6xl font-semibold">29</span><span class="text-2xl font-semibold">,99€</span><span class="ml-2 self-end pb-2 text-sm text-muted">/ mois</span></div>
         <p class="text-sm text-muted">+ <strong class="text-ink">19,99€</strong> de création (unique). Résiliable à tout moment.</p>
@@ -399,7 +401,7 @@
         </ul>
         <a href="https://fidelicard-production.up.railway.app" class="btn mt-auto rounded-full border px-6 py-3.5 text-center font-medium hover:border-ink/20 hover:bg-lav2">Choisir le mensuel</a>
       </article>
-      <article class="reveal relative flex flex-col gap-6 overflow-hidden rounded-[32px] bg-ink p-9 text-white shadow-float">
+      <article class="reveal relative flex flex-col gap-6 overflow-hidden card-3d rounded-[32px] bg-ink p-9 text-white shadow-float">
         <span class="absolute right-7 top-7 rounded-full bg-violet px-3 py-1.5 text-xs font-semibold">-79,87€</span>
         <div><span class="text-sm font-medium uppercase tracking-wide text-violet-soft">Annuel · recommandé</span><h3 class="font-display mt-1 text-2xl font-semibold">L'année complète</h3></div>
         <div class="flex items-baseline gap-1 border-t border-white/15 pt-6 font-display"><span class="text-6xl font-semibold">299</span><span class="text-2xl font-semibold">,99€</span><span class="ml-2 self-end pb-2 text-sm text-white/60">/ an</span></div>
@@ -411,7 +413,7 @@
           <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-soft"></span> Mises à jour prioritaires</li>
           <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-soft"></span> Support prioritaire en français</li>
         </ul>
-        <a href="https://fidelicard-production.up.railway.app" class="btn group mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet to-violet-soft px-6 py-3.5 text-center font-medium text-white shadow-orb hover:-translate-y-0.5 hover:from-violet-deep hover:to-violet">Choisir l'annuel <span class="arr">→</span></a>
+        <a href="https://fidelicard-production.up.railway.app" class="btn group mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-violet px-6 py-3.5 text-center font-medium hover:-translate-y-0.5 hover:bg-violet-deep">Choisir l'annuel <span class="arr">→</span></a>
       </article>
     </div>
     <p class="reveal mt-8 text-center text-sm text-faint">Sans engagement · annulez quand vous voulez · paiement Stripe · RGPD, hébergé en UE</p>
@@ -537,6 +539,29 @@
       if (sec) sec.textContent = left; if (bar) bar.style.width = (left/PERIOD*100)+'%';
     }
     tick(); setInterval(tick, 1000);
+  })();
+
+  // Tilt 3D des cartes (suivi du curseur)
+  (function(){
+    if (reduce || !window.matchMedia('(pointer:fine)').matches) return;
+    document.querySelectorAll('.card-3d').forEach(card => {
+      let raf = null;
+      card.addEventListener('mouseenter', () => { card.style.transition = 'transform .08s linear, box-shadow .3s ease'; });
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        const ry = px * 7, rx = -py * 7;
+        if (!raf) raf = requestAnimationFrame(() => {
+          card.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-5px)`;
+          raf = null;
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transition = 'transform .45s cubic-bezier(.16,.7,.2,1), box-shadow .45s ease';
+        card.style.transform = '';
+      });
+    });
   })();
 
   document.getElementById('year').textContent = new Date().getFullYear();
