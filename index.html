@@ -3,2415 +3,543 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>FidéliCard</title>
-<meta name="description" content="Cartes de fidélité numériques pour cafés, restaurants, salons et boutiques. Apple Wallet & Google Wallet. Anti-fraude TOTP. Belgique, support en français." />
-<meta name="theme-color" content="#F8F8F4" />
+<title>FidéliCard · La fidélité, native dans le téléphone</title>
+<meta name="description" content="Cartes de fidélité numériques dans Apple Wallet & Google Wallet. Sans application, QR anti-fraude TOTP. Conçu en Belgique, en français." />
+<meta name="theme-color" content="#F5F3FB" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          mist:   '#F5F3FB',
+          lav:    '#DDD5E9',
+          lav2:   '#ECE8F5',
+          ink:    '#1E1B2E',
+          ink2:   '#3A3550',
+          muted:  '#6E6A85',
+          faint:  '#9A96AD',
+          violet: { DEFAULT:'#6C5CE7', soft:'#8B7CF0', deep:'#5A4BD4' },
+        },
+        fontFamily: {
+          display: ['"Inter Tight"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          sans:    ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        },
+        borderColor: { DEFAULT: 'rgba(30,27,46,0.08)' },
+        boxShadow: {
+          soft:  '0 20px 60px -26px rgba(76,68,138,0.30)',
+          float: '0 60px 120px -45px rgba(76,68,138,0.55)',
+          orb:   '0 30px 60px -18px rgba(108,92,231,0.55)',
+        },
+        maxWidth: { content: '1200px' },
+      }
+    }
+  }
+</script>
 
 <style>
-/* =========================================================
-   Tokens
-   ========================================================= */
-:root{
-  --bg:        #F8F8F4;
-  --bg-2:      #F1F0EA;
-  --sand:      #EDE9DD;
-  --paper:     #FFFFFF;
-  --ink:       #0A0A0A;
-  --ink-2:     #1B1B1F;
-  --ink-3:     #2A2A30;
-  --muted:     #6B6B70;
-  --muted-2:   #9A9AA0;
-  --line:      rgba(10,10,10,.10);
-  --line-2:    rgba(10,10,10,.06);
-
-  --brand:     #5B4FE9;          /* electric indigo */
-  --brand-2:   #4A3FD1;
-  --brand-soft:#E9E7FC;
-  --mint:      #34D399;
-  --amber:     #F5A524;
-  --rose:      #F26D6D;
-
-  --display:  "Funnel Display", ui-sans-serif, system-ui, sans-serif;
-  --body:     "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --mono:     "Geist Mono", ui-monospace, monospace;
-
-  --maxw: 1280px;
-  --pad:  clamp(20px, 4vw, 56px);
-
-  --r:    14px;
-  --r-l:  22px;
-  --r-xl: 32px;
-}
-
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--ink);
-  font-family:var(--body);
-  font-weight:400;
-  font-size:16.5px;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
-  overflow-x:hidden;
-}
-a{color:inherit;text-decoration:none}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-::selection{background:var(--brand);color:#fff}
-
-h1,h2,h3,h4,p{margin:0}
-.serif{font-family:var(--display)}
-.mono{font-family:var(--mono);font-weight:500;letter-spacing:.01em}
-
-.wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
-
-/* =========================================================
-   Eyebrow
-   ========================================================= */
-.eyebrow{
-  display:inline-flex;align-items:center;gap:10px;
-  font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);
-  padding:7px 12px;border:1px solid var(--line);border-radius:999px;
-  background:rgba(255,255,255,.7);
-  backdrop-filter:blur(8px);
-}
-.eyebrow .dot{
-  width:7px;height:7px;border-radius:50%;background:var(--mint);
-  box-shadow:0 0 0 3px rgba(52,211,153,.18);
-  animation:pulse 2.4s ease-in-out infinite;
-}
-@keyframes pulse{
-  0%,100%{box-shadow:0 0 0 3px rgba(52,211,153,.18)}
-  50%   {box-shadow:0 0 0 7px rgba(52,211,153,.04)}
-}
-.eyebrow.dark{background:rgba(10,10,10,.4);color:rgba(255,255,255,.78);border-color:rgba(255,255,255,.12)}
-
-/* =========================================================
-   Buttons
-   ========================================================= */
-.btn{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:13px 20px;
-  border-radius:999px;
-  font-family:var(--body);font-weight:600;font-size:15px;line-height:1;
-  transition:transform .15s ease, background .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
-  white-space:nowrap;
-  border:1px solid transparent;
-  letter-spacing:-.005em;
-}
-.btn:hover{transform:translateY(-1px)}
-.btn .arr{transition:transform .2s ease;display:inline-block}
-.btn:hover .arr{transform:translateX(3px)}
-
-.btn-brand{background:var(--brand);color:#fff;box-shadow:0 14px 28px -10px rgba(91,79,233,.55), inset 0 1px 0 rgba(255,255,255,.18)}
-.btn-brand:hover{background:var(--brand-2)}
-.btn-ink{background:var(--ink);color:#fff;box-shadow:0 12px 24px -10px rgba(10,10,10,.4), inset 0 1px 0 rgba(255,255,255,.08)}
-.btn-ink:hover{background:#000}
-.btn-outline{border-color:var(--line);color:var(--ink);background:rgba(255,255,255,.7);backdrop-filter:blur(8px)}
-.btn-outline:hover{border-color:var(--ink);background:#fff}
-.btn-ghost-dark{color:#fff;border-color:rgba(255,255,255,.18)}
-.btn-ghost-dark:hover{background:rgba(255,255,255,.08)}
-.btn-sm{padding:9px 14px;font-size:13.5px}
-
-/* =========================================================
-   NAV
-   ========================================================= */
-.nav{
-  position:sticky;top:12px;z-index:50;
-  margin:12px auto 0;max-width:1180px;
-  border-radius:999px;
-  background:rgba(255,255,255,.7);
-  backdrop-filter:blur(18px) saturate(1.2);
-  -webkit-backdrop-filter:blur(18px) saturate(1.2);
-  border:1px solid var(--line);
-  box-shadow:0 10px 30px -16px rgba(10,10,10,.18);
-}
-.nav-inner{
-  display:flex;align-items:center;justify-content:space-between;gap:24px;
-  padding:10px 16px 10px 18px;
-}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.015em}
-.brand-mark{
-  width:30px;height:30px;border-radius:9px;
-  background:linear-gradient(160deg, var(--brand) 0%, #8C82FF 100%);
-  display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:600;font-size:14px;
-  box-shadow:0 6px 16px -6px rgba(91,79,233,.55), inset 0 1px 0 rgba(255,255,255,.4);
-}
-.nav-links{display:flex;gap:24px;font-size:14px;font-weight:500;color:var(--ink-2)}
-.nav-links a{position:relative;padding:4px 0;transition:color .2s ease}
-.nav-links a:hover{color:var(--brand)}
-.nav-cta{display:flex;gap:8px;align-items:center}
-@media (max-width:880px){ .nav-links{display:none} }
-
-/* =========================================================
-   HERO
-   ========================================================= */
-.hero{
-  padding: 56px var(--pad) 80px;
-  position:relative;
-  overflow:hidden;
-}
-/* Hero ambient gradient — now handled by .hero-aurora */
-.hero::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(10,10,10,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(10,10,10,.04) 1px, transparent 1px);
-  background-size:56px 56px;
-  background-position:center top;
-  mask-image:radial-gradient(closest-side at 50% 30%, rgba(0,0,0,.5), transparent 80%);
-  -webkit-mask-image:radial-gradient(closest-side at 50% 30%, rgba(0,0,0,.5), transparent 80%);
-  z-index:0;
-}
-
-.hero-grid{
-  max-width:var(--maxw);margin:0 auto;
-  display:grid;grid-template-columns:1.05fr 1fr;gap:64px;
-  align-items:center;
-  position:relative;z-index:2;
-}
-@media (max-width:980px){ .hero-grid{grid-template-columns:1fr;gap:60px} }
-
-.hero h1{
-  font-family:var(--display);
-  font-weight:500;
-  font-size:clamp(48px, 7vw, 96px);
-  line-height:.96;
-  letter-spacing:-.035em;
-  margin-top:24px;
-  text-wrap:balance;
-}
-.hero h1 .grad{
-  background:linear-gradient(120deg, var(--brand) 0%, #8C82FF 60%, var(--amber) 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.hero-sub{
-  margin-top:26px;
-  font-size:clamp(16.5px,1.5vw,19px);
-  color:var(--muted);
-  max-width:540px;
-  line-height:1.55;
-}
-.hero-ctas{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;align-items:center}
-
-/* social proof line */
-.hero-trust{
-  margin-top:38px;
-  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  font-size:13.5px;color:var(--muted);
-}
-.hero-trust b{color:var(--ink);font-weight:600}
-
-/* ========== Phones Scene — ambient & floating elements ========== */
-
-/* Floating particles */
-.ps-particle{
-  position:absolute;border-radius:50%;z-index:1;pointer-events:none;
-  will-change:transform,opacity;
-}
-.ps-p1{
-  left:6%;top:55%;width:5px;height:5px;
-  background:var(--brand);box-shadow:0 0 14px rgba(91,79,233,.9);
-  animation:particleUp 7s ease-in infinite;
-}
-.ps-p2{
-  right:8%;top:30%;width:4px;height:4px;
-  background:var(--amber);box-shadow:0 0 12px rgba(245,165,36,.9);
-  animation:particleUp 9s ease-in infinite 1.4s;
-}
-.ps-p3{
-  left:45%;top:88%;width:6px;height:6px;
-  background:var(--mint);box-shadow:0 0 16px rgba(52,211,153,.9);
-  animation:particleUp 8s ease-in infinite .7s;
-}
-.ps-p4{
-  right:30%;bottom:8%;width:4px;height:4px;
-  background:var(--brand);box-shadow:0 0 12px rgba(91,79,233,.9);
-  animation:particleUp 10s ease-in infinite 2.2s;
-}
-.ps-p5{
-  left:18%;top:18%;width:3px;height:3px;
-  background:#fff;box-shadow:0 0 10px rgba(255,255,255,.9);
-  animation:particleUp 6.5s ease-in infinite 3s;
-}
-@keyframes particleUp{
-  0%   {transform:translate(0,0) scale(.6);opacity:0}
-  15%  {opacity:1;transform:translate(8px,-12px) scale(1)}
-  60%  {opacity:.8;transform:translate(28px,-90px) scale(1.3)}
-  100% {opacity:0;transform:translate(40px,-150px) scale(.4)}
-}
-
-/* Gradient blobs */
-.ps-blob{
-  position:absolute;border-radius:50%;
-  filter:blur(64px);pointer-events:none;z-index:0;
-}
-.ps-blob-1{
-  width:300px;height:300px;
-  background:radial-gradient(closest-side,rgba(91,79,233,.38),transparent);
-  left:-50px;top:20px;
-  animation:psBlobA 9s ease-in-out infinite;
-}
-.ps-blob-2{
-  width:260px;height:260px;
-  background:radial-gradient(closest-side,rgba(245,165,36,.24),transparent);
-  right:-30px;bottom:40px;
-  animation:psBlobB 11s ease-in-out infinite;
-}
-.ps-blob-3{
-  width:220px;height:220px;
-  background:radial-gradient(closest-side,rgba(52,211,153,.2),transparent);
-  left:38%;top:55%;
-  animation:psBlobC 13s ease-in-out infinite;
-}
-@keyframes psBlobA{
-  0%,100%{transform:translate(0,0) scale(1)}
-  33%    {transform:translate(28px,-22px) scale(1.12)}
-  66%    {transform:translate(-18px,26px) scale(.9)}
-}
-@keyframes psBlobB{
-  0%,100%{transform:translate(0,0) scale(1)}
-  40%    {transform:translate(-24px,18px) scale(1.08)}
-  70%    {transform:translate(18px,-24px) scale(.93)}
-}
-@keyframes psBlobC{
-  0%,100%{transform:translate(0,0) scale(1)}
-  50%    {transform:translate(-28px,-18px) scale(1.1)}
-}
-
-/* TOTP badge */
-.ps-totp{
-  position:absolute;bottom:36px;left:-8px;
-  background:var(--ink);color:#fff;
-  border-radius:20px;padding:14px 18px;
-  display:flex;flex-direction:column;gap:10px;
-  z-index:6;
-  box-shadow:0 24px 48px -14px rgba(10,10,10,.55), inset 0 1px 0 rgba(255,255,255,.08);
-  animation:psChipA 6s ease-in-out infinite;
-}
-.ps-totp-label{
-  font-family:var(--mono);font-size:9px;letter-spacing:.16em;
-  text-transform:uppercase;color:rgba(255,255,255,.5);
-}
-.ps-totp-code{
-  font-family:var(--mono);font-weight:600;font-size:22px;
-  letter-spacing:.18em;color:#fff;line-height:1;
-}
-.ps-totp-row{display:flex;align-items:center;gap:10px}
-.ps-totp-sec{font-family:var(--mono);font-size:10px;letter-spacing:.1em;opacity:.6}
-.ps-totp-bar-wrap{flex:1;height:3px;background:rgba(255,255,255,.14);border-radius:999px;overflow:hidden}
-.ps-totp-bar{height:100%;background:var(--brand);border-radius:999px;transition:width 1s linear}
-
-/* Wallet live chip */
-.ps-chip{
-  position:absolute;top:8px;right:-8px;
-  background:#fff;border:1px solid var(--line);border-radius:999px;
-  padding:9px 14px 9px 11px;
-  display:inline-flex;align-items:center;gap:9px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-  box-shadow:0 16px 36px -12px rgba(10,10,10,.22);
-  z-index:6;
-  animation:psChipB 7.5s ease-in-out infinite;
-}
-.ps-chip .dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--mint);box-shadow:0 0 0 3px rgba(52,211,153,.22);
-  animation:pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes psChipA{
-  0%,100%{transform:rotate(-4deg) translateY(0)}
-  50%    {transform:rotate(-3deg) translateY(-12px)}
-}
-@keyframes psChipB{
-  0%,100%{transform:rotate(3deg) translateY(0)}
-  50%    {transform:rotate(4deg) translateY(-10px)}
-}
-
-/* ========== Phones Scene ========== */
-.phones-scene{
-  position:relative;
-  width:100%;height:560px;
-  max-width:560px;
-  margin:0 auto;
-  user-select:none;
-}
-
-/* iPhone shell — slim */
-.cph{
-  position:absolute;
-  border-radius:42px;
-  background:
-    linear-gradient(135deg,rgba(255,255,255,.1) 0%,transparent 25%,transparent 75%,rgba(255,255,255,.05) 100%),
-    linear-gradient(170deg,#2A2A35 0%,#1C1C22 25%,#0A0A0F 100%);
-  padding:5px;
-  box-shadow:
-    0 60px 100px -20px rgba(10,10,10,.55),
-    0 20px 40px -20px rgba(91,79,233,.2),
-    inset 0 0 0 1px #3A3A45;
-}
-.cph-btn-l{
-  position:absolute;left:-3px;top:110px;width:3px;height:60px;border-radius:2px;
-  background:linear-gradient(90deg,#3A3A45,#1C1C22);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-}
-.cph-btn-r{
-  position:absolute;right:-3px;top:130px;width:3px;height:80px;border-radius:2px;
-  background:linear-gradient(270deg,#3A3A45,#1C1C22);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-}
-
-/* Left phone */
-.cph-left{
-  width:220px;height:452px;
-  left:16px;top:60px;
-  z-index:1;
-  animation:cphFloatA 9s cubic-bezier(.45,.05,.55,.95) infinite;
-  filter:drop-shadow(0 30px 40px rgba(91,79,233,.15));
-}
-/* Right phone */
-.cph-right{
-  width:238px;height:490px;
-  right:10px;top:20px;
-  z-index:2;
-  animation:cphFloatB 11s cubic-bezier(.45,.05,.55,.95) infinite;
-  filter:drop-shadow(0 30px 40px rgba(91,79,233,.18));
-}
-@keyframes cphFloatA{
-  0%   {transform:rotate(-8deg) translate(0,0) rotateX(0deg)}
-  20%  {transform:rotate(-7deg) translate(5px,-18px) rotateX(2deg)}
-  50%  {transform:rotate(-9deg) translate(-3px,-10px) rotateX(-1deg)}
-  75%  {transform:rotate(-7.5deg) translate(3px,-20px) rotateX(1.5deg)}
-  100% {transform:rotate(-8deg) translate(0,0) rotateX(0deg)}
-}
-@keyframes cphFloatB{
-  0%   {transform:rotate(6deg) translate(0,0) rotateX(0deg)}
-  25%  {transform:rotate(7deg) translate(-5px,-22px) rotateX(-2deg)}
-  55%  {transform:rotate(5.5deg) translate(4px,-12px) rotateX(1deg)}
-  80%  {transform:rotate(6.5deg) translate(-2px,-24px) rotateX(-1.5deg)}
-  100% {transform:rotate(6deg) translate(0,0) rotateX(0deg)}
-}
-
-/* Screen */
-.cph-screen{
-  width:100%;height:100%;
-  border-radius:38px;
-  background:
-    radial-gradient(closest-side at 30% 10%,rgba(91,79,233,.16),transparent 60%),
-    radial-gradient(closest-side at 90% 90%,rgba(245,165,36,.08),transparent 60%),
-    linear-gradient(180deg,#EEE9FF 0%,#FFFFFF 30%);
-  overflow:hidden;
-  position:relative;
-}
-/* Glass reflection overlay */
-.cph-screen::after{
-  content:'';position:absolute;inset:0;border-radius:38px;pointer-events:none;z-index:20;
-  background:linear-gradient(125deg,
-    rgba(255,255,255,.22) 0%,
-    rgba(255,255,255,0) 22%,
-    rgba(255,255,255,0) 78%,
-    rgba(255,255,255,.06) 100%);
-}
-
-/* Dynamic island (with camera lens) */
-.cph-di{
-  position:absolute;left:50%;top:8px;transform:translateX(-50%);
-  width:74px;height:17px;border-radius:10px;
-  background:linear-gradient(180deg,#1A1A22 0%,#0A0A0F 100%);
-  z-index:15;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 2px 6px rgba(0,0,0,.4);
-}
-.cph-di::before{
-  content:'';position:absolute;right:7px;top:50%;transform:translateY(-50%);
-  width:7px;height:7px;border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,#2a2a35 0%,#0a0a0f 70%);
-  box-shadow:inset 0 0 0 .5px #1a1a22, inset 0 0 2px rgba(91,79,233,.4);
-}
-.cph-di::after{
-  content:'';position:absolute;left:10px;top:50%;transform:translateY(-50%);
-  width:5px;height:5px;border-radius:50%;
-  background:radial-gradient(circle at 30% 30%,#1f1f28,#0a0a0f);
-}
-
-/* Status bar */
-.cph-sb{
-  position:relative;z-index:4;
-  padding:14px 16px 0;
-  font-family:var(--body);font-weight:600;font-size:13px;color:var(--ink);
-}
-
-/* Wallet title */
-.cph-wtitle{
-  padding:4px 16px 10px;
-  font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.025em;color:var(--ink);
-}
-
-/* Cards stack — cycling */
-.cph-cards{
-  position:relative;margin:0 12px;height:200px;
-}
-.cph-cards .cph-card{
-  position:absolute;left:0;right:0;top:0;margin:0;
-  opacity:0;
-}
-/* Left phone — 9.5s cycle */
-.cph-left .cph-cards .cph-card{animation:cardCycle 9.5s cubic-bezier(.25,.1,.25,1) infinite}
-.cph-left .cph-cards .cph-card:nth-child(1){animation-delay:0s}
-.cph-left .cph-cards .cph-card:nth-child(2){animation-delay:3.2s}
-.cph-left .cph-cards .cph-card:nth-child(3){animation-delay:6.4s}
-/* Right phone — 11.5s cycle, different offsets */
-.cph-right .cph-cards .cph-card{animation:cardCycle 11.5s cubic-bezier(.25,.1,.25,1) infinite}
-.cph-right .cph-cards .cph-card:nth-child(1){animation-delay:1.8s}
-.cph-right .cph-cards .cph-card:nth-child(2){animation-delay:5.7s}
-.cph-right .cph-cards .cph-card:nth-child(3){animation-delay:9.6s}
-
-@keyframes cardCycle{
-  0%       {opacity:0;transform:translateY(24px)}
-  15%,30%  {opacity:1;transform:translateY(0)}
-  45%,100% {opacity:0;transform:translateY(-24px)}
-}
-
-/* Card */
-.cph-card{
-  border-radius:18px;padding:14px;color:#fff;
-  display:flex;flex-direction:column;gap:8px;
-  box-shadow:0 18px 36px -12px rgba(10,10,10,.45);
-  position:relative;overflow:hidden;
-}
-/* Shimmer sweep */
-.cph-card::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.18) 50%,transparent 70%);
-  transform:translateX(-130%) skewX(-12deg);
-  animation:cardShimmer 4.5s ease-in-out infinite;
-  pointer-events:none;
-}
-.cph-right .cph-card::after{animation-delay:2.2s}
-@keyframes cardShimmer{
-  0%,25%{transform:translateX(-130%) skewX(-12deg)}
-  65%,100%{transform:translateX(230%) skewX(-12deg)}
-}
-.cph-dark{background:linear-gradient(155deg,#0F172A 0%,#1F2540 100%)}
-.cph-brand{background:linear-gradient(155deg,var(--brand) 0%,#3D2BB5 100%)}
-.cph-amber{background:linear-gradient(155deg,#D97706 0%,#F5A524 100%)}
-.cph-rose{background:linear-gradient(155deg,#C13A1F 0%,#FF6F4D 100%)}
-.cph-mint{background:linear-gradient(155deg,#0F4D3A 0%,#34D399 100%)}
-
-.cph-card-top{display:flex;justify-content:space-between;align-items:flex-start}
-.cph-tag{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
-.cph-name{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:-.01em;margin-top:2px}
-.cph-logo{
-  width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.92);
-  display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:13px;color:var(--ink);
-}
-.cph-stamps-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
-.cph-stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
-.cph-stamps i{aspect-ratio:1;border-radius:50%;border:1.5px solid rgba(255,255,255,.45)}
-.cph-stamps i.f{background:#fff;border-color:#fff;animation:stampPop .5s cubic-bezier(.34,1.56,.64,1) both}
-.cph-stamps i:nth-child(1){animation-delay:.1s}
-.cph-stamps i:nth-child(2){animation-delay:.22s}
-.cph-stamps i:nth-child(3){animation-delay:.34s}
-.cph-stamps i:nth-child(4){animation-delay:.46s}
-.cph-stamps i:nth-child(5){animation-delay:.58s}
-.cph-stamps i:nth-child(6){animation-delay:.70s}
-.cph-stamps i:nth-child(7){animation-delay:.82s}
-@keyframes stampPop{
-  0%  {transform:scale(0);opacity:0}
-  65% {transform:scale(1.3)}
-  100%{transform:scale(1);opacity:1}
-}
-.cph-pts{font-family:var(--display);font-size:32px;font-weight:600;line-height:1;letter-spacing:-.02em;color:var(--mint);animation:ptsPulse 3.5s ease-in-out infinite}
-@keyframes ptsPulse{
-  0%,100%{opacity:1;transform:scale(1)}
-  50%    {opacity:.8;transform:scale(1.04)}
-}
-.cph-pts small{font-size:12px;font-family:var(--body);font-weight:400;opacity:.85;margin-left:4px;color:#fff}
-.cph-foot{
-  margin-top:2px;padding-top:8px;
-  border-top:1px dashed rgba(255,255,255,.22);
-  font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;
-  display:flex;align-items:center;gap:6px;
-}
-.cph-live{
-  width:6px;height:6px;border-radius:50%;background:#34D399;flex-shrink:0;
-  box-shadow:0 0 0 0 rgba(52,211,153,.6);
-  animation:livePulse 1.8s ease-out infinite;
-}
-@keyframes livePulse{
-  0%   {box-shadow:0 0 0 0 rgba(52,211,153,.7)}
-  70%  {box-shadow:0 0 0 8px rgba(52,211,153,0)}
-  100% {box-shadow:0 0 0 0 rgba(52,211,153,0)}
-}
-
-/* Notification */
-.cph-notif{
-  margin:10px 12px 0;padding:10px 12px;
-  background:rgba(255,255,255,.88);backdrop-filter:blur(14px);
-  border:1px solid rgba(10,10,10,.06);border-radius:14px;
-  display:flex;align-items:center;gap:9px;
-  font-size:11.5px;color:var(--ink);
-  box-shadow:0 6px 16px -6px rgba(10,10,10,.12);
-  animation:notifLoop 6s ease-in-out infinite;
-}
-.cph-right .cph-notif{animation-delay:3s}
-@keyframes notifLoop{
-  0%,10% {transform:translateY(18px);opacity:0}
-  22%,72%{transform:translateY(0);opacity:1}
-  84%,100%{transform:translateY(18px);opacity:0}
-}
-.cph-nd{
-  width:24px;height:24px;border-radius:7px;background:var(--brand);
-  color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0;
-}
-
-/* ========== iPhone stage ========== */
-.phone-stage{
-  position:relative;
-  width:100%;
-  aspect-ratio: 1/1;
-  max-width:580px;
-  margin:0 auto;
-}
-
-/* Floating "card chips" behind phone */
-.float-card{
-  position:absolute;
-  width:240px;height:152px;
-  border-radius:18px;
-  padding:16px;
-  color:#fff;
-  box-shadow:0 30px 70px -25px rgba(10,10,10,.55), 0 0 0 1px rgba(255,255,255,.08) inset;
-  font-family:var(--body);
-  display:flex;flex-direction:column;justify-content:space-between;
-  z-index:1;
-}
-.float-card .fc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.float-card .fc-name{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:-.01em}
-.float-card .fc-tag{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
-.float-card .fc-logo{
-  width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.18);
-  display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:13px;
-}
-.float-card .fc-stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:auto}
-.float-card .fc-stamps i{aspect-ratio:1;border-radius:50%;border:1.5px solid rgba(255,255,255,.45)}
-.float-card .fc-stamps i.f{background:#fff;border-color:#fff}
-.float-card .fc-points{font-family:var(--display);font-size:32px;font-weight:600;letter-spacing:-.02em;line-height:1}
-.float-card .fc-points small{font-size:12px;font-weight:400;opacity:.7;margin-left:5px;letter-spacing:.04em;font-family:var(--body)}
-
-.float-a{
-  left:-2%;top:6%;
-  background:linear-gradient(150deg, #0F172A 0%, #1F2540 100%);
-  transform:rotate(-10deg);
-  animation:floatA 7s ease-in-out infinite;
-}
-.float-b{
-  right:-4%;bottom:6%;
-  background:linear-gradient(150deg, var(--brand) 0%, #8C82FF 100%);
-  transform:rotate(9deg);
-  animation:floatB 8.5s ease-in-out infinite;
-}
-@keyframes floatA{
-  0%,100%{transform:rotate(-10deg) translateY(0)}
-  50%   {transform:rotate(-9deg) translateY(-12px)}
-}
-@keyframes floatB{
-  0%,100%{transform:rotate(9deg) translateY(0)}
-  50%   {transform:rotate(10deg) translateY(-14px)}
-}
-
-/* ----- iPhone ----- */
-.iphone{
-  position:absolute;
-  left:50%;top:50%;transform:translate(-50%,-50%) rotate(-4deg);
-  width:300px;height:610px;
-  border-radius:48px;
-  background:linear-gradient(170deg, #1A1A1F 0%, #0A0A0D 100%);
-  padding:14px;
-  box-shadow:
-    0 60px 120px -20px rgba(10,10,10,.45),
-    0 30px 60px -20px rgba(91,79,233,.2),
-    inset 0 0 0 1.5px #2A2A30,
-    inset 0 0 0 4px #0A0A0D;
-  z-index:2;
-}
-.iphone::before, .iphone::after{
-  content:"";position:absolute;background:#1A1A1F;
-}
-/* Side buttons */
-.iphone::before{ left:-2px;top:110px;width:3px;height:32px;border-radius:2px }
-.iphone::after{ left:-2px;top:160px;width:3px;height:56px;border-radius:2px }
-.iphone .pb-r{position:absolute;right:-2px;top:140px;width:3px;height:88px;background:#1A1A1F;border-radius:2px}
-
-.iphone-screen{
-  position:relative;
-  width:100%;height:100%;
-  border-radius:36px;
-  background:linear-gradient(180deg, #F2EEFF 0%, #FFFFFF 35%, #FFFFFF 100%);
-  overflow:hidden;
-}
-/* Dynamic Island */
-.dynamic-island{
-  position:absolute;left:50%;top:11px;transform:translateX(-50%);
-  width:104px;height:30px;border-radius:18px;background:#0A0A0D;
-  z-index:5;
-}
-.dynamic-island::after{
-  content:"";position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  width:8px;height:8px;border-radius:50%;background:#1B1B1F;
-  box-shadow:inset 0 0 0 1px #2A2A30;
-}
-
-/* Status bar */
-.statusbar{
-  position:relative;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 24px 0;
-  font-family:var(--body);font-weight:600;font-size:14px;color:var(--ink);
-  z-index:6;
-}
-.statusbar .icons{display:flex;gap:5px;align-items:center}
-.statusbar svg{display:block}
-
-/* Wallet UI */
-.wallet-ui{
-  position:relative;padding:44px 16px 16px;
-}
-.wallet-ui .wu-head{display:flex;justify-content:space-between;align-items:flex-end;padding:0 6px 16px}
-.wallet-ui h2{font-family:var(--display);font-weight:600;font-size:30px;letter-spacing:-.02em}
-.wallet-ui .wu-add{font-size:24px;color:var(--brand);font-weight:300;line-height:1}
-
-/* Main wallet card inside iphone */
-.in-card{
-  width:100%;
-  border-radius:18px;
-  padding:18px 18px 14px;
-  color:#fff;
-  box-shadow:0 20px 40px -16px rgba(10,10,10,.45), inset 0 1px 0 rgba(255,255,255,.18);
-  position:relative;overflow:hidden;
-}
-.in-card.primary{
-  background:
-    radial-gradient(120% 80% at 100% 0%, rgba(255,255,255,.18), transparent 60%),
-    linear-gradient(155deg, #5B4FE9 0%, #3D2BB5 100%);
-}
-.in-card .ic-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.in-card .ic-shop{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.01em}
-.in-card .ic-cur{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;opacity:.65;margin-top:2px}
-.in-card .ic-logo{
-  width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.95);
-  display:grid;place-items:center;color:var(--brand);font-family:var(--display);font-weight:700;font-size:18px;
-}
-.in-card .ic-stamps-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-top:18px}
-.in-card .ic-stamps-label b{font-weight:600;color:#fff}
-.in-card .ic-stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:8px}
-.in-card .ic-stamps i{aspect-ratio:1;border-radius:50%;border:1.5px solid rgba(255,255,255,.5)}
-.in-card .ic-stamps i.f{background:#fff;border-color:#fff}
-.in-card .ic-foot{
-  margin-top:14px;padding-top:12px;
-  border-top:1px dashed rgba(255,255,255,.25);
-  display:flex;justify-content:space-between;align-items:center;
-  font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;
-}
-.in-card .ic-foot b{font-weight:600;color:#fff;letter-spacing:.04em;font-family:var(--mono);font-size:11px}
-
-/* Second card peek behind */
-.in-card.peek{
-  background:linear-gradient(150deg, #111 0%, #2A2A30 100%);
-  margin-top:-78px;
-  transform:scale(.96) translateY(0);
-  filter:saturate(.9);
-  z-index:-1;
-}
-.in-card.peek .ic-stamps{display:none}
-.in-card.peek .ic-foot{display:none}
-.in-card.peek .ic-stamps-label{display:none}
-.in-card.peek2{
-  background:linear-gradient(150deg, #C13A1F 0%, #FF6F4D 100%);
-  margin-top:-132px;
-  transform:scale(.92);
-  filter:saturate(.85);
-}
-
-/* Notification bubble inside phone */
-.notif{
-  position:absolute;
-  left:14px;right:14px;bottom:24px;
-  background:rgba(255,255,255,.85);
-  backdrop-filter:blur(18px);
-  border:1px solid rgba(10,10,10,.06);
-  border-radius:18px;
-  padding:12px 14px;
-  display:flex;align-items:center;gap:12px;
-  box-shadow:0 10px 30px -10px rgba(10,10,10,.18);
-  animation:notifIn 1.1s .8s both;
-}
-@keyframes notifIn{
-  from{transform:translateY(80px);opacity:0}
-  to  {transform:translateY(0);opacity:1}
-}
-.notif .nf-logo{
-  width:36px;height:36px;border-radius:10px;
-  background:linear-gradient(160deg, var(--brand), #8C82FF);
-  color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:15px;
-  flex-shrink:0;
-}
-.notif .nf-body{flex:1;min-width:0}
-.notif .nf-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.notif .nf-app{font-family:var(--display);font-weight:600;font-size:12.5px;letter-spacing:-.005em}
-.notif .nf-time{font-family:var(--mono);font-size:10px;color:var(--muted)}
-.notif .nf-msg{font-size:12.5px;color:var(--ink-2);margin-top:1px;line-height:1.3}
-.notif .nf-msg b{font-weight:600}
-
-/* "Live" badge near iphone */
-.live-tag{
-  position:absolute;top:6%;right:4%;
-  background:#fff;border:1px solid var(--line);
-  padding:8px 12px 8px 10px;border-radius:999px;
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-  box-shadow:0 16px 40px -16px rgba(10,10,10,.25);
-  z-index:6;
-}
-.live-tag .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 3px rgba(52,211,153,.2);animation:pulse 2.4s ease-in-out infinite}
-
-/* QR floating tile */
-.qr-tile{
-  position:absolute;bottom:2%;left:-3%;
-  background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;
-  box-shadow:0 20px 50px -16px rgba(10,10,10,.25);
-  z-index:6;
-  transform:rotate(-6deg);
-}
-.qr-tile .qrh{display:flex;justify-content:space-between;align-items:center;gap:24px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.qr-tile .qrh .ring{
-  width:14px;height:14px;border-radius:50%;
-  background:conic-gradient(var(--brand) var(--p,260deg), #E8E5F8 var(--p,260deg) 360deg);
-  position:relative;
-}
-.qr-tile .qrh .ring::after{content:"";position:absolute;inset:3px;background:#fff;border-radius:50%}
-.qr-grid{width:104px;height:104px;display:grid;grid-template-columns:repeat(11,1fr);gap:1.5px}
-.qr-grid i{background:var(--ink);border-radius:1px;display:block}
-.qr-grid i.o{background:transparent}
-.qr-tile .qrf{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-family:var(--mono);font-size:10px}
-.qr-tile .qrf .num{color:var(--brand);font-weight:600;font-size:12px}
-
-/* Battery svg helper */
-.bat{width:24px;height:11px;border:1.4px solid var(--ink);border-radius:3px;position:relative;display:inline-block}
-.bat::after{content:"";position:absolute;right:-3px;top:2.5px;width:2px;height:4px;background:var(--ink);border-radius:0 1px 1px 0}
-.bat::before{content:"";position:absolute;left:1.5px;top:1.5px;bottom:1.5px;width:75%;background:var(--ink);border-radius:1px}
-
-/* Logos / trust band */
-.trustband{
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  padding:22px 0;
-  background:#fff;
-}
-.trustband-inner{
-  display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
-}
-.trustband-inner b{color:var(--ink);font-weight:600}
-.trustband-inner .pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:5px 10px;border:1px solid var(--line);border-radius:999px;
-}
-
-/* =========================================================
-   Section base
-   ========================================================= */
-section{padding:clamp(72px, 9vw, 128px) 0;position:relative}
-.section-head{
-  display:grid;grid-template-columns:1fr 1.5fr;gap:48px;align-items:end;
-  margin-bottom:56px;
-}
-@media (max-width:880px){ .section-head{grid-template-columns:1fr;gap:18px;margin-bottom:40px} }
-.section-head h2{
-  font-family:var(--display);font-weight:500;
-  font-size:clamp(36px, 5.4vw, 68px);
-  letter-spacing:-.03em;line-height:1;margin:14px 0 0;
-  text-wrap:balance;
-}
-.section-head h2 .accent{color:var(--brand)}
-.section-head p{color:var(--muted);max-width:520px;margin:0;font-size:16px}
-.section-head.center{grid-template-columns:1fr;text-align:center;justify-items:center;margin-bottom:48px}
-.section-head.center p{margin:14px auto 0}
-
-/* =========================================================
-   FEATURES
-   ========================================================= */
-.feat-grid{
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  gap:14px;
-}
-.feat{
-  grid-column:span 4;
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:var(--r-xl);
-  padding:28px;
-  display:flex;flex-direction:column;gap:18px;
-  min-height:320px;
-  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-  position:relative;overflow:hidden;
-}
-.feat:hover{transform:translateY(-3px);box-shadow:0 22px 50px -28px rgba(10,10,10,.25);border-color:rgba(10,10,10,.18)}
-.feat-num{
-  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  display:flex;justify-content:center;align-items:center;
-}
-.feat-num b{color:var(--ink);font-weight:600}
-.feat h3{
-  font-family:var(--display);font-weight:500;font-size:24px;letter-spacing:-.018em;line-height:1.1;
-}
-.feat p{color:var(--muted);font-size:15px;line-height:1.55}
-.feat.span6{grid-column:span 6}
-.feat.span8{grid-column:span 8}
-.feat.span4{grid-column:span 4}
-
-.feat.dark{background:var(--ink);color:#fff;border-color:transparent}
-.feat.dark p{color:#9A9AA0}
-.feat.dark .feat-num{color:#7A7A80}
-.feat.dark .feat-num b{color:#fff}
-.feat.brand{background:linear-gradient(160deg, var(--brand) 0%, #4A3FD1 100%);color:#fff;border-color:transparent}
-.feat.brand p{color:rgba(255,255,255,.78)}
-.feat.brand .feat-num{color:rgba(255,255,255,.6)}
-.feat.brand .feat-num b{color:#fff}
-
-@media (max-width:980px){ .feat{grid-column:span 6 !important;min-height:280px} }
-@media (max-width:620px){ .feat{grid-column:span 12 !important;min-height:0} }
-
-/* Inline stamps */
-.mini-stamps{display:flex;gap:6px;margin-top:auto}
-.mini-stamps i{width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;opacity:.4}
-.mini-stamps i.f{background:currentColor;opacity:1}
-
-/* TOTP box */
-.totp-box{
-  margin-top:auto;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:14px;
-  padding:14px;
-  display:flex;align-items:center;gap:14px;
-}
-.feat.brand .totp-box{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18)}
-.totp-code{font-family:var(--mono);font-weight:600;font-size:18px;letter-spacing:.14em}
-.totp-bar{flex:1;height:4px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden}
-.totp-bar .b{height:100%;background:#fff;width:60%;border-radius:999px;transition:width 1s linear}
-.totp-meta{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.78}
-
-/* Mini phone graphic inside features */
-.mini-phone{
-  margin-top:auto;
-  position:relative;width:100%;height:118px;
-  border-radius:14px;
-  background:linear-gradient(180deg, #F2EEFF 0%, #FFF 100%);
-  border:1px solid var(--line-2);
-  overflow:hidden;
-  padding:10px;
-}
-.mini-phone .mp-bar{
-  position:absolute;left:50%;top:8px;transform:translateX(-50%);
-  width:64px;height:16px;border-radius:10px;background:#0A0A0D;
-}
-.mini-phone .mp-card{
-  margin-top:30px;width:100%;height:60px;
-  border-radius:10px;
-  background:linear-gradient(150deg, var(--brand) 0%, #8C82FF 100%);
-  padding:10px;color:#fff;
-  display:flex;justify-content:space-between;align-items:flex-start;
-}
-.mini-phone .mp-name{font-family:var(--display);font-weight:600;font-size:12px}
-.mini-phone .mp-logo{width:20px;height:20px;border-radius:6px;background:#fff;color:var(--brand);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:10px}
-
-/* =========================================================
-   HOW IT WORKS
-   ========================================================= */
-.how{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-
-.how-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
-  counter-reset:steps;
-}
-@media (max-width:980px){ .how-grid{grid-template-columns:repeat(2,1fr)} }
-@media (max-width:560px){ .how-grid{grid-template-columns:1fr} }
-
-.how-card{
-  background:var(--bg);
-  border:1px solid var(--line);
-  border-radius:var(--r-xl);
-  padding:26px;
-  min-height:340px;
-  display:flex;flex-direction:column;gap:18px;
-  position:relative;
-}
-.how-card .step-num{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-}
-.how-card .step-num .n{
-  width:30px;height:30px;border-radius:50%;
-  background:var(--ink);color:#fff;display:grid;place-items:center;
-  font-family:var(--display);font-weight:600;font-size:13px;
-}
-.how-card h3{font-family:var(--display);font-weight:500;font-size:21px;letter-spacing:-.015em;line-height:1.15}
-.how-card p{color:var(--muted);font-size:14.5px;line-height:1.55}
-.how-card .step-tail{margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
-
-/* =========================================================
-   WALLETS — side by side phones
-   ========================================================= */
-.wallets{position:relative;overflow:hidden}
-.wallets::before{
-  content:"";position:absolute;left:-200px;top:30%;
-  width:600px;height:600px;
-  background:radial-gradient(closest-side, rgba(91,79,233,.18), transparent 70%);
-  filter:blur(40px);pointer-events:none;
-}
-
-.wphones{
-  display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch;
-}
-@media (max-width:880px){ .wphones{grid-template-columns:1fr} }
-
-.wp{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:var(--r-xl);
-  padding:32px;
-  display:flex;flex-direction:column;gap:20px;
-  position:relative;overflow:hidden;
-  min-height:560px;
-}
-.wp.dark{background:var(--ink);color:#fff;border-color:transparent}
-.wp.dark p{color:#9A9AA0}
-.wp .wp-tag{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-}
-.wp.dark .wp-tag{color:#9A9AA0}
-.wp .wp-tag .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 3px rgba(52,211,153,.18)}
-.wp h3{font-family:var(--display);font-weight:500;font-size:32px;letter-spacing:-.025em;line-height:1.05}
-.wp h3 .accent{color:var(--brand)}
-.wp.dark h3 .accent{color:#A99FFF}
-.wp p{font-size:15.5px;color:var(--muted);max-width:380px;line-height:1.55}
-
-.wp-stage{
-  margin-top:auto;
-  position:relative;
-  height:340px;
-  border-radius:18px;
-  background:linear-gradient(180deg, var(--bg-2) 0%, var(--paper) 100%);
-  border:1px solid var(--line-2);
-  overflow:hidden;
-}
-.wp.dark .wp-stage{background:linear-gradient(180deg, #0F0F12 0%, #06060A 100%);border-color:rgba(255,255,255,.06)}
-
-/* small phone inside wallets section */
-.mini-iphone, .mini-pixel{
-  position:absolute;
-  width:200px;height:410px;
-  border-radius:34px;
-  padding:9px;
-  z-index:2;
-  box-shadow:0 30px 60px -20px rgba(10,10,10,.45);
-}
-.mini-iphone{
-  background:linear-gradient(170deg, #1A1A1F 0%, #0A0A0D 100%);
-  left:50%;top:50%;transform:translate(-50%,-50%) rotate(-3deg);
-}
-.mini-pixel{
-  background:linear-gradient(170deg, #2B2B30 0%, #181820 100%);
-  left:50%;top:50%;transform:translate(-50%,-50%) rotate(3deg);
-}
-.mini-iphone .mscr, .mini-pixel .mscr{
-  width:100%;height:100%;border-radius:26px;background:#fff;overflow:hidden;position:relative;
-}
-.mini-iphone .mdi{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:74px;height:22px;border-radius:14px;background:#0A0A0D}
-.mini-pixel .mph{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#0A0A0D}
-
-.mini-iphone .msb, .mini-pixel .msb{
-  display:flex;justify-content:space-between;align-items:center;padding:11px 18px 0;
-  font-size:11.5px;font-weight:600;
-}
-.mini-iphone .mwh, .mini-pixel .mwh{padding:34px 12px 0;display:flex;justify-content:space-between;align-items:flex-end}
-.mini-iphone .mwh h4, .mini-pixel .mwh h4{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.02em;margin:0}
-.mini-iphone .mwh small, .mini-pixel .mwh small{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
-
-.mini-card-in{
-  margin:14px 12px 0;border-radius:12px;padding:12px;color:#fff;
-  box-shadow:0 12px 24px -10px rgba(10,10,10,.35);
-}
-.mini-card-in.apple{background:linear-gradient(155deg, #5B4FE9 0%, #3D2BB5 100%)}
-.mini-card-in.google{background:linear-gradient(155deg, #0F172A 0%, #1F2540 100%)}
-.mini-card-in .mc-top{display:flex;justify-content:space-between;align-items:flex-start}
-.mini-card-in .mc-name{font-family:var(--display);font-weight:600;font-size:12.5px;letter-spacing:-.01em}
-.mini-card-in .mc-tag{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
-.mini-card-in .mc-logo{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.9);color:var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:10px}
-.mini-card-in.apple .mc-logo{color:var(--brand)}
-.mini-card-in .mc-stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:10px}
-.mini-card-in .mc-stamps i{aspect-ratio:1;border-radius:50%;border:1.2px solid rgba(255,255,255,.5)}
-.mini-card-in .mc-stamps i.f{background:#fff;border-color:#fff}
-.mini-card-in .mc-points{font-family:var(--display);font-weight:600;font-size:24px;line-height:1;margin-top:10px;color:var(--mint)}
-.mini-card-in .mc-points small{color:#fff;font-size:10px;font-family:var(--body);font-weight:400;opacity:.8;margin-left:5px}
-
-/* tiny floating notif */
-.mini-notif{
-  position:absolute;left:8px;right:8px;bottom:8px;
-  background:rgba(255,255,255,.9);backdrop-filter:blur(10px);
-  border-radius:12px;padding:8px 10px;
-  font-size:11px;color:var(--ink);
-  display:flex;align-items:center;gap:8px;
-  border:1px solid rgba(10,10,10,.06);
-}
-.mini-notif .nd{width:18px;height:18px;border-radius:5px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:600;flex-shrink:0}
-.mini-notif b{font-weight:600}
-
-/* =========================================================
-   PRICING
-   ========================================================= */
-.pricing{background:var(--ink);color:#fff;position:relative;overflow:hidden}
-.pricing::before{
-  content:"";position:absolute;inset:0;
-  background:
-    radial-gradient(closest-side at 30% 0%, rgba(91,79,233,.35), transparent 60%),
-    radial-gradient(closest-side at 80% 30%, rgba(245,165,36,.12), transparent 65%);
-  filter:blur(40px);pointer-events:none;
-}
-.pricing::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
-  background-size:64px 64px;
-  mask-image:radial-gradient(closest-side at 50% 30%, rgba(0,0,0,.6), transparent 80%);
-  -webkit-mask-image:radial-gradient(closest-side at 50% 30%, rgba(0,0,0,.6), transparent 80%);
-}
-.pricing .section-head h2{color:#fff}
-.pricing .section-head p{color:#9A9AA0}
-.pricing .eyebrow{background:rgba(255,255,255,.06);color:#9A9AA0;border-color:rgba(255,255,255,.12)}
-
-.price-grid{
-  display:grid;grid-template-columns:1fr 1.05fr;gap:16px;
-  position:relative;z-index:2;
-}
-@media (max-width:880px){ .price-grid{grid-template-columns:1fr} }
-
-.plan{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:var(--r-xl);
-  padding:36px;
-  display:flex;flex-direction:column;gap:20px;
-  position:relative;overflow:hidden;
-  backdrop-filter:blur(14px);
-}
-.plan.feature{
-  background:#fff;color:var(--ink);border-color:transparent;
-  box-shadow:0 30px 80px -30px rgba(91,79,233,.45);
-}
-.plan-tag{
-  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
-  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  padding:7px 12px;border-radius:999px;
-  background:rgba(255,255,255,.06);color:#C5C5CD;border:1px solid rgba(255,255,255,.12);
-}
-.plan.feature .plan-tag{background:var(--brand-soft);color:var(--brand);border-color:transparent}
-
-.plan h3{font-family:var(--display);font-weight:500;font-size:32px;letter-spacing:-.02em;line-height:1}
-.plan .lede{color:#9A9AA0;max-width:360px;margin:0;font-size:15.5px}
-.plan.feature .lede{color:var(--muted)}
-
-.price-block{
-  display:flex;align-items:baseline;gap:6px;
-  padding-top:24px;border-top:1px solid rgba(255,255,255,.1);
-  font-family:var(--display);
-}
-.plan.feature .price-block{border-color:var(--line)}
-.price-amount{font-size:72px;font-weight:500;line-height:.95;letter-spacing:-.04em}
-.price-cur{font-size:28px;font-weight:500;letter-spacing:-.02em;margin-left:-2px}
-.price-period{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#9A9AA0;margin-left:8px;padding-bottom:10px;align-self:flex-end}
-.plan.feature .price-period{color:var(--muted)}
-
-.price-note{
-  font-family:var(--body);font-size:13.5px;color:#9A9AA0;line-height:1.55;
-}
-.plan.feature .price-note{color:var(--muted)}
-.price-note b{color:#fff;font-weight:600}
-.plan.feature .price-note b{color:var(--ink)}
-
-.plan ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:11px;font-size:14.5px}
-.plan ul li{display:flex;gap:12px;align-items:flex-start;color:#D6D6DC}
-.plan.feature ul li{color:var(--ink-2)}
-.plan ul li::before{
-  content:"";flex-shrink:0;margin-top:7px;
-  width:6px;height:6px;border-radius:50%;background:var(--brand);
-}
-.plan.feature ul li::before{background:var(--brand)}
-.plan .plan-cta{margin-top:auto;padding-top:18px}
-
-.save-badge{
-  position:absolute;top:24px;right:24px;
-  background:var(--brand);color:#fff;
-  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  padding:8px 12px;border-radius:999px;font-weight:600;
-}
-
-/* =========================================================
-   CTA FINAL
-   ========================================================= */
-.cta-final{background:var(--bg);position:relative;overflow:hidden}
-.cta-box{
-  background:linear-gradient(160deg, var(--ink) 0%, #1A1A22 100%);
-  color:#fff;
-  border-radius:var(--r-xl);
-  padding:clamp(36px, 5.6vw, 72px);
-  display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:end;
-  position:relative;overflow:hidden;
-  box-shadow:0 40px 90px -40px rgba(10,10,10,.5);
-}
-.cta-box::before{
-  content:"";position:absolute;
-  right:-100px;top:-100px;
-  width:500px;height:500px;
-  background:radial-gradient(closest-side, rgba(91,79,233,.45), transparent 70%);
-  filter:blur(40px);pointer-events:none;
-}
-@media (max-width:880px){ .cta-box{grid-template-columns:1fr;align-items:start} }
-.cta-box h2{
-  font-family:var(--display);font-weight:500;
-  font-size:clamp(36px, 5.4vw, 72px);
-  letter-spacing:-.03em;line-height:.95;
-  text-wrap:balance;position:relative;z-index:2;
-}
-.cta-box h2 .accent{color:#A99FFF}
-.cta-box p{color:#9A9AA0;margin-top:16px;max-width:440px;position:relative;z-index:2}
-.cta-actions{display:flex;flex-direction:column;gap:14px;align-items:flex-end;position:relative;z-index:2}
-@media (max-width:880px){ .cta-actions{align-items:flex-start} }
-.cta-actions .meta{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7A7A80}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-footer{padding:64px 0 32px}
-.foot-grid{
-  display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px;
-  margin-bottom:48px;
-}
-@media (max-width:760px){ .foot-grid{grid-template-columns:1fr 1fr;gap:36px} }
-footer h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 16px;font-weight:600}
-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;font-size:14.5px;color:var(--ink-2)}
-footer a:hover{color:var(--brand)}
-.foot-brand{font-family:var(--display);font-weight:600;font-size:22px;color:var(--ink);display:flex;align-items:center;gap:10px}
-.foot-tag{margin-top:14px;font-size:14.5px;line-height:1.55;max-width:330px;color:var(--muted)}
-.foot-legal{
-  border-top:1px solid var(--line);padding-top:24px;
-  display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);
-}
-
-/* =========================================================
-   Reveal — blur + translate
-   ========================================================= */
-.reveal{
-  opacity:0;transform:translateY(32px);filter:blur(14px);
-  transition:opacity .9s cubic-bezier(.2,.6,.2,1),
-             transform .9s cubic-bezier(.2,.6,.2,1),
-             filter .9s cubic-bezier(.2,.6,.2,1);
-}
-.reveal.in{opacity:1;transform:none;filter:blur(0)}
-.reveal.d1{transition-delay:.1s}
-.reveal.d2{transition-delay:.2s}
-.reveal.d3{transition-delay:.3s}
-.reveal.d4{transition-delay:.4s}
-
-/* Word stagger reveal — for headlines */
-.split-word{
-  display:inline-block;opacity:0;transform:translateY(18px);filter:blur(10px);
-  transition:opacity .8s cubic-bezier(.2,.6,.2,1),
-             transform .8s cubic-bezier(.2,.6,.2,1),
-             filter .8s cubic-bezier(.2,.6,.2,1);
-}
-.in .split-word,.split-word.in{opacity:1;transform:none;filter:blur(0)}
-
-/* =========================================================
-   Cursor blob
-   ========================================================= */
-.cursor-blob{
-  position:fixed;top:0;left:0;
-  width:480px;height:480px;border-radius:50%;
-  background:radial-gradient(circle at center,rgba(91,79,233,.4) 0%,rgba(91,79,233,.18) 35%,rgba(91,79,233,0) 70%);
-  filter:blur(40px);
-  pointer-events:none;
-  z-index:1;
-  transform:translate(-50%,-50%);
-  will-change:transform;
-  opacity:0;transition:opacity .4s ease;
-}
-.cursor-blob.active{opacity:1}
-@media (max-width:880px),(pointer:coarse){.cursor-blob{display:none}}
-
-/* =========================================================
-   Grain texture overlay
-   ========================================================= */
-.grain-overlay{
-  position:fixed;inset:0;pointer-events:none;z-index:9999;
-  opacity:.045;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* =========================================================
-   Hero Aurora
-   ========================================================= */
-.hero-aurora{
-  position:absolute;inset:-20% -10% -10% -10%;
-  pointer-events:none;z-index:0;overflow:hidden;
-}
-.hero-aurora i{
-  position:absolute;border-radius:50%;
-  filter:blur(80px);opacity:.7;
-  will-change:transform;
-}
-.hero-aurora .a1{
-  width:680px;height:680px;left:5%;top:-250px;
-  background:conic-gradient(from 0deg,rgba(91,79,233,.6),rgba(140,130,255,.3),rgba(245,165,36,.25),rgba(91,79,233,.6));
-  animation:auroraSpin 28s linear infinite;
-}
-.hero-aurora .a2{
-  width:520px;height:520px;right:5%;top:-100px;
-  background:conic-gradient(from 180deg,rgba(245,165,36,.35),rgba(91,79,233,.4),rgba(255,160,160,.2),rgba(245,165,36,.35));
-  animation:auroraSpin 36s linear infinite reverse;
-}
-.hero-aurora .a3{
-  width:420px;height:420px;left:38%;top:200px;
-  background:conic-gradient(from 90deg,rgba(52,211,153,.25),rgba(91,79,233,.3),rgba(140,130,255,.2),rgba(52,211,153,.25));
-  animation:auroraSpin 44s linear infinite;
-}
-@keyframes auroraSpin{
-  0%  {transform:rotate(0deg) scale(1)}
-  50% {transform:rotate(180deg) scale(1.1)}
-  100%{transform:rotate(360deg) scale(1)}
-}
-
-/* =========================================================
-   Marquee infini
-   ========================================================= */
-.marquee{
-  overflow:hidden;
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  background:var(--paper);
-  padding:14px 0;
-  position:relative;
-}
-.marquee::before,.marquee::after{
-  content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
-}
-.marquee::before{left:0;background:linear-gradient(90deg,var(--paper),transparent)}
-.marquee::after{right:0;background:linear-gradient(-90deg,var(--paper),transparent)}
-.marquee-track{
-  display:flex;gap:36px;white-space:nowrap;
-  animation:marqueeScroll 32s linear infinite;
-  width:max-content;
-}
-.marquee-item{
-  font-family:var(--display);
-  font-size:clamp(18px,2.4vw,28px);
-  font-weight:500;
-  letter-spacing:-.02em;
-  color:var(--ink);
-  display:inline-flex;align-items:center;gap:9px;
-}
-.marquee-item .em{font-style:normal;font-size:.92em;opacity:.85}
-.marquee-dot{
-  font-family:var(--display);font-weight:500;
-  font-size:clamp(18px,2.4vw,28px);
-  color:var(--brand);
-  display:inline-flex;align-items:center;
-}
-@keyframes marqueeScroll{
-  from{transform:translateX(0)}
-  to  {transform:translateX(-50%)}
-}
-
-/* =========================================================
-   Card 3D tilt setup
-   ========================================================= */
-.feat,.how-card{
-  transform-style:preserve-3d;
-  transition:transform .25s cubic-bezier(.2,.6,.2,1), box-shadow .25s ease, border-color .25s ease;
-  will-change:transform;
-}
-.feat .feat-inner,.how-card .how-inner{
-  transform:translateZ(20px);
-}
-
-@media (prefers-reduced-motion: reduce){
-  *{animation:none !important;transition:none !important}
-  .reveal{opacity:1;transform:none}
-}
-
-/* =========================================================
-   GSAP — scroll progress + reveal handoff
-   ========================================================= */
-.scroll-progress{
-  position:fixed;left:0;top:0;height:3px;width:100%;
-  transform:scaleX(0);transform-origin:0 50%;
-  background:linear-gradient(90deg,var(--brand) 0%,#8C82FF 55%,var(--amber) 100%);
-  box-shadow:0 0 12px rgba(91,79,233,.5);
-  z-index:10000;pointer-events:none;
-}
-/* When GSAP drives the reveals, disable the CSS transition so the two don't fight */
-.gsap-on .reveal{transition:none}
-@media (prefers-reduced-motion: reduce){ .scroll-progress{display:none} }
-
-/* =========================================================
-   Hand-drawn underline (humanising accent)
-   ========================================================= */
-.hand-underline{position:relative;display:inline-block}
-.hand-underline > svg{
-  position:absolute;left:-3%;bottom:-.16em;width:106%;height:.42em;
-  overflow:visible;pointer-events:none;
-}
-.hand-underline > svg path{
-  fill:none;stroke:var(--brand);stroke-width:3.4;
-  stroke-linecap:round;stroke-linejoin:round;
-}
-.hero h1 .hand-underline > svg path{stroke:var(--amber);stroke-width:4}
-
-/* ========================================================
-   Mobile responsive
-   ======================================================== */
-@media (max-width:980px){
-  .hero{padding:36px var(--pad) 56px}
-  .hero-grid{grid-template-columns:1fr;gap:48px}
-  .phones-scene{height:520px;max-width:480px}
-  .cph-left{width:206px;height:424px;left:6%;top:54px}
-  .cph-right{width:222px;height:456px;right:4%;top:18px}
-}
-
-@media (max-width:760px){
-  .nav{margin:8px auto 0;max-width:calc(100% - 24px)}
-  .nav-inner{padding:8px 12px 8px 14px;gap:12px}
-  .brand{font-size:16px}
-  .brand-mark{width:26px;height:26px;border-radius:7px;font-size:13px}
-  .nav-cta .btn-sm{padding:8px 12px;font-size:12.5px}
-  section{padding:64px 0}
-  .section-head{margin-bottom:32px}
-  .hero{padding:24px var(--pad) 40px}
-  .hero h1{font-size:clamp(42px,10vw,64px);margin-top:18px;line-height:1}
-  .hero-sub{margin-top:18px;font-size:15.5px}
-  .hero-ctas{margin-top:24px;gap:10px}
-  .hero-ctas .btn{flex:1;justify-content:center;min-width:0}
-  .hero::before{width:600px;height:500px;top:-100px}
-  .trustband{padding:18px 0}
-  .trustband-inner{gap:10px;font-size:10.5px}
-  .trustband-inner .pill{padding:4px 8px}
-  .cta-box{padding:36px 24px;gap:24px}
-  .cta-actions{gap:10px;align-items:stretch}
-  .cta-actions .btn{justify-content:center}
-  footer{padding:48px 0 24px}
-  .foot-grid{gap:32px;margin-bottom:32px}
-  .foot-legal{flex-direction:column;align-items:flex-start;gap:10px}
-}
-
-@media (max-width:560px){
-  .phones-scene{height:460px;max-width:380px}
-  .cph-left{width:172px;height:354px;left:0;top:50px}
-  .cph-right{width:184px;height:380px;right:0;top:18px}
-  .cph-cards{height:180px}
-  .cph-card{padding:12px;border-radius:16px;gap:6px}
-  .cph-wtitle{padding:4px 12px 8px;font-size:22px}
-  .cph-sb{padding:12px 12px 0;font-size:11.5px}
-  .cph-name{font-size:13px}
-  .cph-tag{font-size:8px}
-  .cph-logo{width:24px;height:24px;font-size:11px}
-  .cph-stamps-lbl{font-size:8px}
-  .cph-pts{font-size:26px}
-  .cph-pts small{font-size:10px}
-  .cph-foot{font-size:8px}
-  .cph-notif{margin:8px 10px 0;padding:8px 10px;font-size:10.5px;border-radius:12px}
-  .cph-nd{width:20px;height:20px;font-size:10px}
-  /* Pricing */
-  .plan{padding:28px}
-  .price-amount{font-size:56px}
-  .price-cur{font-size:22px}
-  .save-badge{top:18px;right:18px;font-size:10px;padding:6px 10px}
-  /* CTA box */
-  .cta-box h2{font-size:clamp(32px,8vw,48px)}
-  /* Feat cards already collapse to span 12 */
-  .feat{padding:24px;min-height:0}
-  /* How cards */
-  .how-card{padding:22px;min-height:0}
-  /* Wallet cards */
-  .wp{padding:24px;min-height:0}
-  .wp h3{font-size:26px}
-  .wp-stage{height:280px}
-  .mini-iphone,.mini-pixel{width:170px;height:350px}
-}
-
-@media (max-width:400px){
-  .phones-scene{height:420px;max-width:340px}
-  .cph-left{width:152px;height:312px}
-  .cph-right{width:164px;height:336px}
-  .cph-cards{height:170px}
-  .nav-cta .btn-sm{padding:7px 10px;font-size:12px}
-}
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+    background:
+      radial-gradient(120% 90% at 80% -10%, #EDE7F8 0%, transparent 55%),
+      radial-gradient(120% 90% at 0% 0%, #E9E3F6 0%, transparent 50%),
+      #F5F3FB;
+    color:#1E1B2E; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  ::selection{ background:#6C5CE7; color:#fff; }
+  .font-display{ letter-spacing:-0.03em; }
+
+  /* ---------- Apparition (fade + rise + scale, fluide) ---------- */
+  .reveal{ opacity:0; transform:translateY(34px) scale(.985); transition:opacity 1s cubic-bezier(.16,.7,.2,1), transform 1s cubic-bezier(.16,.7,.2,1); }
+  .reveal.in{ opacity:1; transform:none; }
+  [data-d="1"]{ transition-delay:.09s } [data-d="2"]{ transition-delay:.18s } [data-d="3"]{ transition-delay:.27s } [data-d="4"]{ transition-delay:.36s }
+
+  /* ---------- Scène 3D ---------- */
+  .scene{ perspective:1300px; }
+  .phone-tilt{ position:absolute; left:50%; top:50%; transform-style:preserve-3d; transform:translate(-50%,-50%) rotateX(var(--rx,7deg)) rotateY(var(--ry,-16deg)); transition:transform .4s cubic-bezier(.16,.7,.2,1); will-change:transform; }
+  .phone-float{ transform-style:preserve-3d; animation:floatY 7s ease-in-out infinite; }
+  @keyframes floatY{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-16px) } }
+
+  /* ---------- Téléphone ---------- */
+  .phone{
+    position:relative; width:300px; height:610px; border-radius:54px;
+    background:linear-gradient(165deg,#2b2740 0%,#16131f 60%);
+    padding:13px; transform-style:preserve-3d;
+    box-shadow:0 80px 130px -50px rgba(40,30,90,.6), inset 0 0 0 1.5px rgba(255,255,255,.10), inset 0 0 0 4px #15121e;
+  }
+  .screen{ position:relative; width:100%; height:100%; border-radius:42px; overflow:hidden;
+    background:linear-gradient(180deg,#EDE7FB 0%,#F8F5FE 36%,#FFFFFF 100%); }
+  .island{ position:absolute; left:50%; top:12px; transform:translateX(-50%); width:104px; height:30px; border-radius:18px; background:#0d0b14; z-index:6; }
+  .island::after{ content:''; position:absolute; right:11px; top:50%; transform:translateY(-50%); width:8px; height:8px; border-radius:50%; background:#241f33; box-shadow:inset 0 0 0 1px #34304a; }
+
+  .chip{ position:absolute; transform:translate3d(var(--px,0),var(--py,0),var(--z,60px)); transition:transform .3s cubic-bezier(.16,.7,.2,1); }
+
+  /* ---------- Mascotte bille ---------- */
+  .orb{ position:relative; border-radius:50%;
+    background:radial-gradient(circle at 32% 26%, #ffffff 0%, #d7ccf2 20%, #9c8ce6 52%, #6c5ce7 82%, #5848c4 100%);
+    box-shadow:inset -10px -12px 26px rgba(54,38,120,.45), 0 36px 60px -20px rgba(108,92,231,.55);
+    animation:floatY 6s ease-in-out infinite; }
+  .orb::after{ content:''; position:absolute; top:14%; left:20%; width:30%; height:24%; border-radius:50%; filter:blur(2px);
+    background:radial-gradient(circle, rgba(255,255,255,.95), transparent 70%); }
+
+  .stamp{ aspect-ratio:1; border-radius:50%; border:1.6px solid rgba(108,92,231,.45); }
+  .stamp.on{ background:#6C5CE7; border-color:#6C5CE7; }
+
+  .live{ box-shadow:0 0 0 0 rgba(108,92,231,.55); animation:pulse 2s ease-out infinite; }
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(108,92,231,.55)} 70%{box-shadow:0 0 0 9px rgba(108,92,231,0)} 100%{box-shadow:0 0 0 0 rgba(108,92,231,0)} }
+
+  .marquee{ overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent); mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent); }
+  .marquee-track{ display:flex; align-items:center; gap:2.6rem; width:max-content; animation:scrollx 40s linear infinite; }
+  @keyframes scrollx{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  details.faq summary{ list-style:none; cursor:pointer; } details.faq summary::-webkit-details-marker{ display:none; }
+  details.faq .pm{ transition:transform .3s ease; } details.faq[open] .pm{ transform:rotate(45deg); }
+  .arr{ display:inline-block; transition:transform .3s ease; } a:hover .arr,.btn:hover .arr{ transform:translateX(3px); }
+  .btn{ transition:transform .3s cubic-bezier(.16,.7,.2,1), background .3s, box-shadow .3s, border-color .3s; }
+
+  /* ---------- Peps : blobs colorés, lueurs, dégradé animé ---------- */
+  .blob{ position:absolute; border-radius:50%; filter:blur(64px); pointer-events:none; will-change:transform; z-index:-1; }
+  .blob-a{ background:radial-gradient(closest-side, rgba(139,124,240,.55), transparent 70%); animation:drift 18s ease-in-out infinite; }
+  .blob-b{ background:radial-gradient(closest-side, rgba(185,168,255,.50), transparent 70%); animation:drift 24s ease-in-out infinite reverse; }
+  .blob-c{ background:radial-gradient(closest-side, rgba(108,92,231,.40), transparent 70%); animation:drift 30s ease-in-out infinite; }
+  @keyframes drift{ 0%,100%{ transform:translate(0,0) scale(1) } 33%{ transform:translate(38px,-28px) scale(1.12) } 66%{ transform:translate(-28px,32px) scale(.92) } }
+  .grad-anim{ background:linear-gradient(90deg,#6C5CE7,#8B7CF0,#C9B8FF,#8B7CF0,#6C5CE7); background-size:300% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; animation:gradmove 7s linear infinite; }
+  @keyframes gradmove{ to{ background-position:-300% 0 } }
+
+  @media (max-width:980px){ .phone{ width:264px; height:536px } }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important } .reveal{ opacity:1 !important; transform:none !important } .phone-tilt{ transform:none !important } }
 </style>
 </head>
-<body>
 
-<!-- Cursor blob follower -->
-<div class="cursor-blob" aria-hidden="true"></div>
+<body class="font-sans text-ink">
 
-<!-- Scroll progress bar (GSAP-driven) -->
-<div class="scroll-progress" aria-hidden="true"></div>
-
-<!-- Grain texture overlay -->
-<div class="grain-overlay" aria-hidden="true"></div>
-
-<!-- ====================== NAV ====================== -->
-<header class="nav">
-  <div class="nav-inner">
-    <a class="brand" href="#top" aria-label="FidéliCard — accueil">
-      <span class="brand-mark">F</span>
-      <span>FidéliCard</span>
+<!-- ============================== NAV ============================== -->
+<header class="sticky top-4 z-50 px-4">
+  <div class="mx-auto flex max-w-content items-center justify-between gap-4 rounded-full border bg-white/65 px-3 py-2.5 pl-5 backdrop-blur-xl shadow-soft">
+    <a href="#top" class="flex items-center gap-2.5" aria-label="FidéliCard">
+      <span class="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-violet to-violet-soft text-sm font-semibold text-white">F</span>
+      <span class="font-display text-lg font-semibold">FidéliCard</span>
     </a>
-    <nav class="nav-links" aria-label="Navigation principale">
-      <a href="#fonctionnalites">Fonctionnalités</a>
-      <a href="#comment">Comment ça marche</a>
-      <a href="#wallets">Wallets</a>
-      <a href="#tarifs">Tarifs</a>
-      <a href="#faq">FAQ</a>
+    <nav class="hidden items-center gap-8 text-sm font-medium text-muted md:flex">
+      <a href="#produit" class="transition-colors hover:text-ink">Produit</a>
+      <a href="#fonctionnalites" class="transition-colors hover:text-ink">Fonctionnalités</a>
+      <a href="#tarifs" class="transition-colors hover:text-ink">Tarifs</a>
+      <a href="#faq" class="transition-colors hover:text-ink">FAQ</a>
     </nav>
-    <div class="nav-cta">
-      <a class="btn btn-outline btn-sm" href="https://fidelicard-production.up.railway.app">Se connecter</a>
-      <a class="btn btn-ink btn-sm" href="#tarifs">Commencer <span class="arr">→</span></a>
+    <div class="flex items-center gap-2">
+      <a href="https://fidelicard-production.up.railway.app" class="hidden rounded-full px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-lav2 sm:inline-block">Se connecter</a>
+      <a href="#tarifs" class="btn group inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-white hover:-translate-y-0.5">Commencer <span class="arr text-violet-soft">→</span></a>
     </div>
   </div>
 </header>
 
-<!-- ====================== HERO ====================== -->
-<section class="hero" id="top">
-  <!-- Aurora gradient layers -->
-  <div class="hero-aurora" aria-hidden="true">
-    <i class="a1"></i>
-    <i class="a2"></i>
-    <i class="a3"></i>
+<!-- ============================== HERO ============================== -->
+<section id="top" class="relative mx-auto max-w-content px-6 pb-24 pt-16 md:pt-24">
+  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="blob blob-a" style="width:440px;height:440px;left:-10%;top:-6%"></div>
+    <div class="blob blob-b" style="width:380px;height:380px;right:-8%;top:22%"></div>
+    <div class="blob blob-c" style="width:320px;height:320px;left:32%;bottom:-12%"></div>
   </div>
-  <div class="hero-grid">
-    <div>
-      <h1 class="reveal d1">
-        La fidélité, déjà <span class="grad">dans la poche</span> de vos clients.
+  <div class="grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
+    <!-- Texte -->
+    <div class="relative z-10">
+      <span class="reveal inline-flex items-center gap-2 rounded-full border bg-white/70 px-4 py-1.5 text-xs font-medium tracking-wide text-muted backdrop-blur">
+        <span class="h-1.5 w-1.5 rounded-full bg-violet"></span> Fidélité · wallet natif
+      </span>
+      <h1 class="reveal font-display mt-6 text-[clamp(3rem,7vw,5.6rem)] font-semibold leading-[0.96]" data-d="1">
+        La fidélité,<br />native dans<br />le <span class="grad-anim">téléphone.</span>
       </h1>
-      <p class="hero-sub reveal d2">
-        FidéliCard transforme votre carte de fidélité en un objet numérique
-        qui vit dans Apple Wallet et Google Wallet — sans application à installer,
+      <p class="reveal mt-7 max-w-md text-lg leading-relaxed text-muted" data-d="2">
+        Vos cartes de fidélité vivent dans Apple&nbsp;Wallet et Google&nbsp;Wallet. Sans application,
         sans papier, avec un QR anti-fraude qui change toutes les 30&nbsp;secondes.
       </p>
-      <div class="hero-ctas reveal d3">
-        <a class="btn btn-brand" href="#tarifs">Lancer ma carte <span class="arr">→</span></a>
-        <a class="btn btn-outline" href="#comment">Voir une démo</a>
+      <div class="reveal mt-9 flex flex-wrap items-center gap-3" data-d="3">
+        <a href="#tarifs" class="btn group inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-violet to-violet-soft px-7 py-4 text-base font-medium text-white shadow-orb hover:-translate-y-0.5 hover:from-violet-deep hover:to-violet">Lancer ma carte <span class="arr">→</span></a>
+        <a href="#produit" class="btn inline-flex items-center gap-2 rounded-full border bg-white/60 px-7 py-4 text-base font-medium text-ink backdrop-blur hover:border-ink/20">Voir la démo</a>
+      </div>
+      <div class="reveal mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted" data-d="4">
+        <span>Sans application</span><span class="text-faint">·</span><span>Apple &amp; Google Wallet</span><span class="text-faint">·</span><span>Équipe belge</span>
       </div>
     </div>
 
-    <!-- ============ Phones Scene ============ -->
-    <div class="phones-scene reveal d2" aria-hidden="true">
+    <!-- Scène 3D -->
+    <div class="scene relative mx-auto h-[600px] w-full max-w-[460px]" id="scene" aria-hidden="true">
+      <!-- halo derrière le téléphone -->
+      <div class="pointer-events-none absolute left-1/2 top-1/2 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full" style="background:radial-gradient(closest-side, rgba(108,92,231,.42), transparent 70%); filter:blur(40px); z-index:-1"></div>
+      <!-- bille mascotte -->
+      <div class="orb" style="position:absolute; width:88px; height:88px; right:2%; top:4%; z-index:3"></div>
+      <div class="orb" style="position:absolute; width:40px; height:40px; left:0%; bottom:18%; z-index:3; animation-delay:1.2s"></div>
 
-      <!-- Ambient blobs -->
-      <div class="ps-blob ps-blob-1"></div>
-      <div class="ps-blob ps-blob-2"></div>
-      <div class="ps-blob ps-blob-3"></div>
+      <div class="phone-tilt" id="phone">
+        <div class="phone-float">
+          <div class="phone">
+            <div class="screen">
+              <div class="island"></div>
+              <div class="px-5 pt-14">
+                <div class="flex items-center justify-between">
+                  <span class="font-display text-2xl font-semibold text-ink">Wallet</span>
+                  <span class="text-xs font-medium text-faint">9:41</span>
+                </div>
 
-      <!-- Floating particles -->
-      <div class="ps-particle ps-p1"></div>
-      <div class="ps-particle ps-p2"></div>
-      <div class="ps-particle ps-p3"></div>
-      <div class="ps-particle ps-p4"></div>
-      <div class="ps-particle ps-p5"></div>
+                <!-- carte de fidélité -->
+                <div class="mt-4 overflow-hidden rounded-3xl bg-gradient-to-br from-violet to-[#4A3FB8] p-5 text-white shadow-[0_20px_40px_-16px_rgba(76,68,138,.6)]">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <div class="text-[10px] uppercase tracking-[0.16em] text-white/60">Café · Bruxelles</div>
+                      <div class="font-display text-lg font-semibold">Café Lumière</div>
+                    </div>
+                    <div class="grid h-9 w-9 place-items-center rounded-lg bg-white/95 text-sm font-bold text-violet">L</div>
+                  </div>
+                  <div class="mt-5 text-[10px] uppercase tracking-[0.14em] text-white/70">7 / 10 tampons</div>
+                  <div class="mt-2 grid grid-cols-5 gap-2">
+                    <i class="h-5 rounded-full bg-white"></i><i class="h-5 rounded-full bg-white"></i><i class="h-5 rounded-full bg-white"></i><i class="h-5 rounded-full bg-white"></i><i class="h-5 rounded-full bg-white"></i>
+                    <i class="h-5 rounded-full bg-white"></i><i class="h-5 rounded-full bg-white"></i><i class="h-5 rounded-full border border-white/40"></i><i class="h-5 rounded-full border border-white/40"></i><i class="h-5 rounded-full border border-white/40"></i>
+                  </div>
+                  <div class="mt-5 flex items-center justify-between border-t border-dashed border-white/25 pt-3 text-[9px] uppercase tracking-[0.14em] text-white/75">
+                    <span class="inline-flex items-center gap-1.5"><span class="live h-1.5 w-1.5 rounded-full bg-white"></span> QR · TOTP · 30s</span>
+                    <span>N° 0042</span>
+                  </div>
+                </div>
 
-<!-- Left phone — tampons -->
-      <div class="cph cph-left">
-        <div class="cph-btn-l"></div>
-        <div class="cph-btn-r"></div>
-        <div class="cph-screen">
-          <div class="cph-di"></div>
-          <div class="cph-sb">9:41</div>
-          <div class="cph-wtitle">Wallet</div>
-          <div class="cph-cards">
-            <div class="cph-card cph-dark">
-              <div class="cph-card-top">
-                <div>
-                  <div class="cph-tag">Café · Bruxelles</div>
-                  <div class="cph-name">Café Lumière</div>
+                <!-- 2e carte (aperçu) -->
+                <div class="mt-3 rounded-3xl bg-gradient-to-br from-[#2b2740] to-[#16131f] p-4 text-white/90">
+                  <div class="flex items-center justify-between">
+                    <div class="font-display text-sm font-semibold">Atelier Éline</div>
+                    <div class="text-[10px] text-white/50">Salon · Liège</div>
+                  </div>
+                  <div class="mt-2 font-display text-2xl font-semibold text-violet-soft">1 240<span class="ml-1 text-xs font-normal text-white/60">pts</span></div>
                 </div>
-                <div class="cph-logo">L</div>
               </div>
-              <div class="cph-stamps-lbl"><b>7 / 10</b> tampons</div>
-              <div class="cph-stamps">
-                <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i>
-                <i class="f"></i><i class="f"></i><i></i><i></i><i></i>
+
+              <!-- notification -->
+              <div class="absolute inset-x-4 bottom-5 flex items-center gap-3 rounded-2xl border border-white/40 bg-white/85 p-3 backdrop-blur">
+                <div class="grid h-9 w-9 place-items-center rounded-xl bg-violet text-sm font-bold text-white">+1</div>
+                <div class="text-[12px] leading-tight"><div class="font-semibold text-ink">+1 tampon ajouté</div><div class="text-muted">à l'instant · Café Lumière</div></div>
               </div>
-              <div class="cph-foot"><span class="cph-live"></span>QR · TOTP · 30s</div>
-            </div>
-            <div class="cph-card cph-amber">
-              <div class="cph-card-top">
-                <div>
-                  <div class="cph-tag">Boulangerie · Namur</div>
-                  <div class="cph-name">Pain &amp; Co</div>
-                </div>
-                <div class="cph-logo" style="color:#D97706">P</div>
-              </div>
-              <div class="cph-stamps-lbl"><b>4 / 10</b> tampons</div>
-              <div class="cph-stamps">
-                <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i>
-                <i></i><i></i><i></i><i></i><i></i>
-              </div>
-              <div class="cph-foot"><span class="cph-live"></span>QR · TOTP · 30s</div>
-            </div>
-            <div class="cph-card cph-rose">
-              <div class="cph-card-top">
-                <div>
-                  <div class="cph-tag">Pizzeria · Liège</div>
-                  <div class="cph-name">Pizzeria Bonita</div>
-                </div>
-                <div class="cph-logo" style="color:#C13A1F">B</div>
-              </div>
-              <div class="cph-stamps-lbl"><b>9 / 10</b> tampons</div>
-              <div class="cph-stamps">
-                <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i>
-                <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i>
-              </div>
-              <div class="cph-foot"><span class="cph-live"></span>QR · TOTP · 30s</div>
             </div>
           </div>
-          <div class="cph-notif">
-            <div class="cph-nd">F</div>
-            <div><b>+1 tampon</b> · Café Lumière</div>
+
+          <!-- chips flottants en profondeur -->
+          <div class="chip absolute -left-8 top-24 inline-flex items-center gap-2 rounded-full border bg-white/90 px-3.5 py-2 text-xs font-medium text-muted shadow-soft backdrop-blur" style="--z:90px">
+            <span class="live h-1.5 w-1.5 rounded-full bg-violet"></span> Ajouté à Apple Wallet
+          </div>
+          <div class="chip absolute -right-6 bottom-28 rounded-2xl border bg-white/90 px-4 py-3 shadow-soft backdrop-blur" style="--z:110px">
+            <div class="text-[10px] uppercase tracking-wide text-faint">Anti-fraude</div>
+            <div class="font-display text-lg font-semibold text-violet">30s</div>
           </div>
         </div>
       </div>
-
-      <!-- Right phone — points -->
-      <div class="cph cph-right">
-        <div class="cph-btn-l"></div>
-        <div class="cph-btn-r"></div>
-        <div class="cph-screen">
-          <div class="cph-di"></div>
-          <div class="cph-sb">9:41</div>
-          <div class="cph-wtitle">Wallet</div>
-          <div class="cph-cards">
-            <div class="cph-card cph-brand">
-              <div class="cph-card-top">
-                <div>
-                  <div class="cph-tag">Salon · Liège</div>
-                  <div class="cph-name">Atelier Éline</div>
-                </div>
-                <div class="cph-logo" style="color:var(--brand)">É</div>
-              </div>
-              <div class="cph-stamps-lbl">Solde points</div>
-              <div class="cph-pts">1&thinsp;240<small>pts</small></div>
-              <div class="cph-foot"><span class="cph-live"></span>QR · TOTP · 30s</div>
-            </div>
-            <div class="cph-card cph-mint">
-              <div class="cph-card-top">
-                <div>
-                  <div class="cph-tag">Coiffure · Bruxelles</div>
-                  <div class="cph-name">Studio Mila</div>
-                </div>
-                <div class="cph-logo" style="color:#0F4D3A">M</div>
-              </div>
-              <div class="cph-stamps-lbl">Solde points</div>
-              <div class="cph-pts">485<small>pts</small></div>
-              <div class="cph-foot"><span class="cph-live"></span>QR · TOTP · 30s</div>
-            </div>
-            <div class="cph-card cph-dark">
-              <div class="cph-card-top">
-                <div>
-                  <div class="cph-tag">Fleuriste · Gand</div>
-                  <div class="cph-name">Maison Rose</div>
-                </div>
-                <div class="cph-logo" style="color:#0F172A">R</div>
-              </div>
-              <div class="cph-stamps-lbl">Solde points</div>
-              <div class="cph-pts">820<small>pts</small></div>
-              <div class="cph-foot"><span class="cph-live"></span>QR · TOTP · 30s</div>
-            </div>
-          </div>
-          <div class="cph-notif">
-            <div class="cph-nd" style="background:var(--mint);color:var(--ink)">É</div>
-            <div><b>+50 pts</b> · Atelier Éline</div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- ====================== MARQUEE ====================== -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <span class="marquee-item"><span class="em">☕</span>Cafés</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🍝</span>Restaurants</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">✂</span>Salons</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🥐</span>Boulangeries</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🌷</span>Fleuristes</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🛍</span>Boutiques</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🍷</span>Bars à vin</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🍦</span>Glaciers</span>
-    <span class="marquee-dot">·</span>
-    <!-- Duplicate for seamless loop -->
-    <span class="marquee-item"><span class="em">☕</span>Cafés</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🍝</span>Restaurants</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">✂</span>Salons</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🥐</span>Boulangeries</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🌷</span>Fleuristes</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🛍</span>Boutiques</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🍷</span>Bars à vin</span>
-    <span class="marquee-dot">·</span>
-    <span class="marquee-item"><span class="em">🍦</span>Glaciers</span>
-    <span class="marquee-dot">·</span>
+<!-- ============================== MARQUEE ============================== -->
+<div class="border-y bg-white/50 py-5">
+  <div class="marquee">
+    <div class="marquee-track font-display text-xl font-medium text-ink/80">
+      <span>Cafés</span><span class="text-violet">·</span><span>Restaurants</span><span class="text-violet">·</span><span>Salons</span><span class="text-violet">·</span><span>Boulangeries</span><span class="text-violet">·</span><span>Fleuristes</span><span class="text-violet">·</span><span>Boutiques</span><span class="text-violet">·</span><span>Bars à vin</span><span class="text-violet">·</span><span>Glaciers</span><span class="text-violet">·</span>
+      <span>Cafés</span><span class="text-violet">·</span><span>Restaurants</span><span class="text-violet">·</span><span>Salons</span><span class="text-violet">·</span><span>Boulangeries</span><span class="text-violet">·</span><span>Fleuristes</span><span class="text-violet">·</span><span>Boutiques</span><span class="text-violet">·</span><span>Bars à vin</span><span class="text-violet">·</span><span>Glaciers</span><span class="text-violet">·</span>
+    </div>
   </div>
 </div>
 
-<!-- ====================== FEATURES ====================== -->
-<section id="fonctionnalites">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div>
-        <span class="eyebrow"><span class="dot"></span>01 · Fonctionnalités</span>
-      </div>
-      <h2>Tout pour fidéliser. <span class="accent">Rien</span> de superflu.</h2>
-    </div>
-
-    <div class="feat-grid">
-
-      <article class="feat span6 reveal">
-        <div class="feat-num"><b>Tampons ou points</b></div>
-        <h3>Deux systèmes, une carte.</h3>
-        <p>Choisissez le format qui parle à vos clients : 10 tampons → 1 boisson offerte, ou cumul de points à dépenser librement. Basculez de l'un à l'autre quand vous voulez, sans toucher à votre programme existant.</p>
-        <div class="mini-stamps" aria-hidden="true" style="color:var(--brand)">
-          <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i>
-        </div>
-      </article>
-
-      <article class="feat span6 brand reveal d1">
-        <div class="feat-num"><b>Anti-fraude TOTP</b></div>
-        <h3>Un QR qui change toutes les 30 secondes.</h3>
-        <p>Chaque scan génère un code dynamique unique, avec cooldown par client. Impossible à copier, impossible à réutiliser. La sécurité d'une banque pour une carte de café.</p>
-        <div class="totp-box">
-          <span class="totp-code" id="totpCode">8 4 1 · 2 9 7</span>
-          <div style="flex:1;display:flex;flex-direction:column;gap:6px">
-            <span class="totp-meta"><span id="totpSec">29s</span> · expiration</span>
-            <div class="totp-bar"><div class="b" id="totpBar"></div></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="feat reveal">
-        <div class="feat-num"><b>Apple Wallet</b></div>
-        <h3>Une place dans la poche.</h3>
-        <p>Vos clients ajoutent la carte à Apple Wallet en un tap. Notifications natives, mise à jour automatique, géolocalisation à la boutique (opt-in).</p>
-        <div class="mini-phone" aria-hidden="true">
-          <div class="mp-bar"></div>
-          <div class="mp-card">
-            <div>
-              <div class="mp-name">Café Lumière</div>
-              <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin-top:4px">7 / 10 tampons</div>
-            </div>
-            <div class="mp-logo">L</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="feat reveal d1">
-        <div class="feat-num"><b>Google Wallet</b></div>
-        <h3>Et tous les Android.</h3>
-        <p>Compatibilité Google Wallet vérifiée. Vos clients Android profitent de la même expérience fluide, sans installer d'application tierce.</p>
-        <div class="mini-phone" aria-hidden="true" style="background:linear-gradient(180deg, #F5F5F1 0%, #FFF 100%)">
-          <div class="mp-bar"></div>
-          <div class="mp-card" style="background:linear-gradient(150deg, var(--ink) 0%, #2A2A30 100%)">
-            <div>
-              <div class="mp-name">Atelier Éline</div>
-              <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin-top:4px">1 240 pts</div>
-            </div>
-            <div class="mp-logo" style="background:var(--mint);color:var(--ink)">É</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="feat reveal d2">
-        <div class="feat-num"><b>Tableau de bord PWA</b></div>
-        <h3>Votre comptoir, en PWA.</h3>
-        <p>Scannez depuis votre téléphone, votre tablette ou un vieil iPad au comptoir. L'app s'installe en un clic et marche hors-ligne pour le scan.</p>
-        <div class="mini-stamps" aria-hidden="true" style="color:var(--ink)">
-          <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i>
-        </div>
-      </article>
-
-      <article class="feat span8 dark reveal">
-        <div class="feat-num"><b>Made in Belgium</b></div>
-        <h3>Une équipe belge, joignable en français.</h3>
-        <p>Une équipe basée en Belgique qui répond en français — et qui comprend les contraintes des commerçants locaux. Un chatbot disponible 24/7 pour les questions rapides, et une vraie équipe humaine pour le reste. Conforme RGPD, hébergement européen, données qui restent en Europe.</p>
-      </article>
-
-      <article class="feat span4 reveal d1">
-        <div class="feat-num"><b>Mise en route</b></div>
-        <h3>10 minutes. Pas plus.</h3>
-        <p>Logo, nom, règle de fidélité. Vous donnez le lien à vos clients. C'est fait.</p>
-      </article>
-
-    </div>
+<!-- ============================== FONCTIONNALITÉS (app showcase) ============================== -->
+<section id="produit" class="relative mx-auto max-w-content px-6 py-24 md:py-32">
+  <div class="orb" style="position:absolute; width:54px; height:54px; right:3%; top:7%; z-index:5" aria-hidden="true"></div>
+  <div class="reveal mx-auto mb-20 max-w-2xl text-center">
+    <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">Le produit</span>
+    <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Pensé pour le téléphone. D'abord.</h2>
+    <p class="mt-5 text-lg text-muted">Trois choses qui changent tout. Zéro friction pour vos clients.</p>
   </div>
-</section>
 
-<!-- ====================== HOW IT WORKS ====================== -->
-<section class="how" id="comment">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div>
-        <span class="eyebrow"><span class="dot"></span>02 · Comment ça marche</span>
-      </div>
-      <h2>De l'inscription au <span class="accent">premier scan</span>, en un après-midi.</h2>
+  <!-- rangée 1 -->
+  <div class="grid items-center gap-12 lg:grid-cols-2">
+    <div class="reveal">
+      <span class="text-sm font-medium uppercase tracking-[0.14em] text-faint">Wallet natif</span>
+      <h3 class="font-display mt-3 text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold leading-tight">Dans Apple &amp; Google Wallet, nativement.</h3>
+      <p class="mt-4 max-w-md text-lg leading-relaxed text-muted">Vos clients ajoutent la carte en un tap. Notifications natives, mise à jour automatique des tampons, aucune application tierce à installer.</p>
     </div>
-
-    <div class="how-grid">
-      <article class="how-card reveal">
-        <div class="step-num"><span class="n">1</span></div>
-        <h3>Vous créez votre carte</h3>
-        <p>Logo, couleurs, nom du commerce, règle de fidélité (tampons ou points). Aperçu en direct dans le tableau de bord.</p>
-        <div class="step-tail">10 min · Aucune CB requise</div>
-      </article>
-      <article class="how-card reveal d1">
-        <div class="step-num"><span class="n">2</span></div>
-        <h3>Vos clients l'ajoutent</h3>
-        <p>Un QR code ou un lien partagé sur vos réseaux. Un tap, et la carte vit dans Apple Wallet ou Google Wallet.</p>
-        <div class="step-tail">Aucune appli à installer</div>
-      </article>
-      <article class="how-card reveal d2">
-        <div class="step-num"><span class="n">3</span></div>
-        <h3>Vous scannez à chaque visite</h3>
-        <p>Au comptoir, depuis votre téléphone ou tablette. QR dynamique TOTP, anti-double-scan, cooldown par client.</p>
-        <div class="step-tail">Hors-ligne possible</div>
-      </article>
-      <article class="how-card reveal d3">
-        <div class="step-num"><span class="n">4</span></div>
-        <h3>Vos clients reviennent</h3>
-        <p>Notifications wallet à l'approche de la récompense. Tableau de bord temps réel : visites, top clients, conversion.</p>
-        <div class="step-tail">+ Notifications natives</div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ====================== WALLETS ====================== -->
-<section class="wallets" id="wallets">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div>
-        <span class="eyebrow"><span class="dot"></span>03 · Compatibilité</span>
-      </div>
-      <h2>Apple Wallet. Google Wallet. <span class="accent">Aucune appli</span> à installer.</h2>
-    </div>
-
-    <div class="wphones">
-      <article class="wp reveal">
-        <span class="wp-tag"><span class="dot"></span>Compatible iOS · Apple Watch</span>
-        <h3>Apple <span class="accent">Wallet</span></h3>
-        <p>Vos clients ajoutent la carte en un tap. Notifications natives, mise à jour automatique du nombre de tampons, géolocalisation à proximité de votre commerce (opt-in).</p>
-
-        <div class="wp-stage" aria-hidden="true">
-          <div class="mini-iphone">
-            <div class="mscr">
-              <div class="mdi"></div>
-              <div class="msb">
-                <span>9:41</span>
-                <span style="display:inline-flex;gap:4px;align-items:center">
-                  <svg width="14" height="9" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx=".5"/><rect x="5" y="5" width="3" height="6" rx=".5"/><rect x="10" y="2" width="3" height="9" rx=".5"/><rect x="15" y="0" width="3" height="11" rx=".5" opacity=".35"/></svg>
-                  <span class="bat" style="transform:scale(.8)"></span>
-                </span>
-              </div>
-              <div class="mwh">
-                <h4>Wallet</h4>
-                <small>iOS</small>
-              </div>
-              <div class="mini-card-in apple">
-                <div class="mc-top">
-                  <div>
-                    <div class="mc-tag">Café · Bruxelles</div>
-                    <div class="mc-name">Café Lumière</div>
-                  </div>
-                  <div class="mc-logo">L</div>
-                </div>
-                <div class="mc-stamps">
-                  <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i>
-                  <i class="f"></i><i class="f"></i><i></i><i></i><i></i>
-                </div>
-              </div>
-              <div class="mini-notif">
-                <div class="nd">F</div>
-                <div><b>+1 tampon</b> chez Café Lumière</div>
-              </div>
+    <div class="reveal" data-d="1">
+      <div class="rounded-[32px] border bg-white/70 p-8 shadow-soft backdrop-blur">
+        <div class="flex gap-4">
+          <div class="flex-1 rounded-2xl bg-gradient-to-br from-violet to-[#4A3FB8] p-4 text-white">
+            <div class="text-[10px] uppercase tracking-wide text-white/60">Apple Wallet</div>
+            <div class="font-display mt-1 font-semibold">Café Lumière</div>
+            <div class="mt-4 grid grid-cols-5 gap-1.5">
+              <i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp on"></i><i class="stamp !border-white/40"></i><i class="stamp !border-white/40"></i><i class="stamp !border-white/40"></i>
             </div>
           </div>
-        </div>
-      </article>
-
-      <article class="wp dark reveal d1">
-        <span class="wp-tag"><span class="dot"></span>Compatible Android · Wear OS</span>
-        <h3>Google <span class="accent">Wallet</span></h3>
-        <p>Compatibilité Google Wallet vérifiée pour tout appareil Android moderne. Tap pour ouvrir, notifications, suggestions intelligentes à proximité de votre commerce.</p>
-
-        <div class="wp-stage" aria-hidden="true">
-          <div class="mini-pixel">
-            <div class="mscr">
-              <div class="mph"></div>
-              <div class="msb">
-                <span>9:41</span>
-                <span style="display:inline-flex;gap:4px;align-items:center">
-                  <svg width="14" height="9" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx=".5"/><rect x="5" y="5" width="3" height="6" rx=".5"/><rect x="10" y="2" width="3" height="9" rx=".5"/><rect x="15" y="0" width="3" height="11" rx=".5" opacity=".35"/></svg>
-                  <span class="bat" style="transform:scale(.8)"></span>
-                </span>
-              </div>
-              <div class="mwh">
-                <h4>Wallet</h4>
-                <small>Android</small>
-              </div>
-              <div class="mini-card-in google">
-                <div class="mc-top">
-                  <div>
-                    <div class="mc-tag">Salon · Liège</div>
-                    <div class="mc-name">Atelier Éline</div>
-                  </div>
-                  <div class="mc-logo">É</div>
-                </div>
-                <div>
-                  <div style="font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-top:8px">Solde</div>
-                  <div class="mc-points">1&thinsp;240<small>pts</small></div>
-                </div>
-              </div>
-              <div class="mini-notif">
-                <div class="nd" style="background:var(--mint);color:var(--ink)">É</div>
-                <div><b>+50 points</b> chez Atelier Éline</div>
-              </div>
-            </div>
+          <div class="flex-1 rounded-2xl bg-gradient-to-br from-[#2b2740] to-[#16131f] p-4 text-white">
+            <div class="text-[10px] uppercase tracking-wide text-white/50">Google Wallet</div>
+            <div class="font-display mt-1 font-semibold">Atelier Éline</div>
+            <div class="font-display mt-6 text-3xl font-semibold text-violet-soft">1 240<span class="ml-1 text-xs font-normal text-white/60">pts</span></div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- rangée 2 (inversée) -->
+  <div class="mt-16 grid items-center gap-12 lg:grid-cols-2">
+    <div class="reveal order-2 lg:order-1" data-d="1">
+      <div class="rounded-[32px] border bg-white/70 p-8 shadow-soft backdrop-blur">
+        <div class="flex items-center justify-between rounded-2xl bg-ink p-6 text-white">
+          <div>
+            <div class="text-[10px] uppercase tracking-[0.16em] text-white/50">Code à usage unique</div>
+            <div class="font-display mt-2 text-3xl font-semibold tracking-[0.12em]" id="totp">8 4 1 · 2 9 7</div>
+          </div>
+          <div class="text-right">
+            <div class="font-display text-2xl font-semibold text-violet-soft" id="totpSec">30</div>
+            <div class="text-[10px] uppercase tracking-wide text-white/50">secondes</div>
+          </div>
+        </div>
+        <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-lav"><div id="totpBar" class="h-full rounded-full bg-violet transition-[width] duration-1000 ease-linear" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="reveal order-1 lg:order-2">
+      <span class="text-sm font-medium uppercase tracking-[0.14em] text-faint">Anti-fraude</span>
+      <h3 class="font-display mt-3 text-[clamp(1.8rem,3.4vw,2.8rem)] font-semibold leading-tight">Un QR qui change toutes les 30 s.</h3>
+      <p class="mt-4 max-w-md text-lg leading-relaxed text-muted">Chaque scan génère un code dynamique unique (TOTP), avec cooldown par client. Une capture d'écran devient inutile : impossible à copier, impossible à rejouer.</p>
+    </div>
+  </div>
+
+  <!-- petite grille -->
+  <div class="mt-20 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur">
+      <h4 class="font-display text-xl font-semibold">Tampons ou points</h4>
+      <p class="mt-2 text-muted">10 tampons → 1 offert, ou cumul de points. Basculez quand vous voulez.</p>
+    </div>
+    <div class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="1">
+      <h4 class="font-display text-xl font-semibold">Comptoir en poche</h4>
+      <p class="mt-2 text-muted">Scannez depuis un téléphone ou une tablette. Installation en un clic, scan hors-ligne.</p>
+    </div>
+    <div class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="2">
+      <h4 class="font-display text-xl font-semibold">Conçu en Belgique</h4>
+      <p class="mt-2 text-muted">Équipe belge, en français. RGPD, hébergé en Europe, données en Europe.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== COMMENT ============================== -->
+<section id="fonctionnalites" class="relative overflow-hidden border-y bg-white/50 px-6 py-24 md:py-32">
+  <div class="blob blob-c" style="width:380px;height:380px;left:-6%;top:-12%" aria-hidden="true"></div>
+  <div class="mx-auto max-w-content">
+    <div class="reveal mx-auto mb-16 max-w-2xl text-center">
+      <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">En route</span>
+      <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Lancée en un après-midi.</h2>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="reveal rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur">
+        <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-violet font-display font-semibold text-white">1</div>
+        <h3 class="font-display mt-5 text-xl font-semibold">Vous créez la carte</h3>
+        <p class="mt-2 text-muted">Logo, couleurs, règle de fidélité. Aperçu en direct. 10 minutes, sans CB.</p>
+      </div>
+      <div class="reveal rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur" data-d="1">
+        <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-violet font-display font-semibold text-white">2</div>
+        <h3 class="font-display mt-5 text-xl font-semibold">Vos clients l'ajoutent</h3>
+        <p class="mt-2 text-muted">Un QR ou un lien. Un tap, et la carte vit dans le Wallet. Aucune appli.</p>
+      </div>
+      <div class="reveal rounded-[28px] border bg-white/70 p-8 text-center shadow-soft backdrop-blur" data-d="2">
+        <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-violet font-display font-semibold text-white">3</div>
+        <h3 class="font-display mt-5 text-xl font-semibold">Vous scannez, ils reviennent</h3>
+        <p class="mt-2 text-muted">D'un scan au comptoir. Notification wallet à l'approche de la récompense.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== AVIS (minimal) ============================== -->
+<section class="mx-auto max-w-content px-6 py-24 md:py-32">
+  <div class="reveal mx-auto mb-14 max-w-2xl text-center">
+    <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">Ils nous font confiance</span>
+    <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Des commerçants comme vous.</h2>
+  </div>
+  <div class="grid gap-6 md:grid-cols-3">
+    <figure class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur">
+      <blockquote class="text-lg leading-relaxed text-ink2">« Fini les cartes en carton qui finissent à la machine à laver. Mes habitués adorent. »</blockquote>
+      <figcaption class="mt-5 flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-violet font-semibold text-white">C</span><span><span class="block font-semibold">Camille</span><span class="block text-sm text-muted">Café Lumière · Bruxelles</span></span></figcaption>
+    </figure>
+    <figure class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="1">
+      <blockquote class="text-lg leading-relaxed text-ink2">« Installé entre deux fournées. Le soir même, trois clients avaient leur carte. Rien à expliquer. »</blockquote>
+      <figcaption class="mt-5 flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-ink font-semibold text-white">M</span><span><span class="block font-semibold">Mehdi</span><span class="block text-sm text-muted">Pain &amp; Co · Namur</span></span></figcaption>
+    </figure>
+    <figure class="reveal rounded-[28px] border bg-white/70 p-7 shadow-soft backdrop-blur" data-d="2">
+      <blockquote class="text-lg leading-relaxed text-ink2">« Je voulais un truc qui me ressemble, pas une appli froide. Mes couleurs, mon logo. »</blockquote>
+      <figcaption class="mt-5 flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-full bg-violet-soft font-semibold text-white">É</span><span><span class="block font-semibold">Élise</span><span class="block text-sm text-muted">Atelier Éline · Liège</span></span></figcaption>
+    </figure>
+  </div>
+  <p class="reveal mx-auto mt-8 max-w-2xl text-center text-sm text-faint">Avis d'exemple le temps de récolter les vôtres : on préfère attendre vos vrais mots plutôt que d'en inventer. L'équipe FidéliCard</p>
+</section>
+
+<!-- ============================== TARIFS ============================== -->
+<section id="tarifs" class="relative overflow-hidden border-y bg-white/50 px-6 py-24 md:py-32">
+  <div class="blob blob-b" style="width:420px;height:420px;right:-8%;bottom:-14%" aria-hidden="true"></div>
+  <div class="mx-auto max-w-content">
+    <div class="reveal mx-auto mb-14 max-w-2xl text-center">
+      <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">Tarifs</span>
+      <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Deux formules. Pas de surprise.</h2>
+    </div>
+    <div class="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
+      <article class="reveal flex flex-col gap-6 rounded-[32px] border bg-white/80 p-9 shadow-soft backdrop-blur">
+        <div><span class="text-sm font-medium uppercase tracking-wide text-muted">Mensuel</span><h3 class="font-display mt-1 text-2xl font-semibold">Sans engagement</h3></div>
+        <div class="flex items-baseline gap-1 border-t pt-6 font-display"><span class="text-6xl font-semibold">29</span><span class="text-2xl font-semibold">,99€</span><span class="ml-2 self-end pb-2 text-sm text-muted">/ mois</span></div>
+        <p class="text-sm text-muted">+ <strong class="text-ink">19,99€</strong> de création (unique). Résiliable à tout moment.</p>
+        <ul class="flex flex-col gap-3 text-[15px]">
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet"></span> Tampons ou points</li>
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet"></span> Apple + Google Wallet</li>
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet"></span> QR anti-fraude</li>
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet"></span> Tableau de bord PWA</li>
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet"></span> Support en français</li>
+        </ul>
+        <a href="https://fidelicard-production.up.railway.app" class="btn mt-auto rounded-full border px-6 py-3.5 text-center font-medium hover:border-ink/20 hover:bg-lav2">Choisir le mensuel</a>
+      </article>
+      <article class="reveal relative flex flex-col gap-6 overflow-hidden rounded-[32px] bg-ink p-9 text-white shadow-float">
+        <span class="absolute right-7 top-7 rounded-full bg-violet px-3 py-1.5 text-xs font-semibold">-79,87€</span>
+        <div><span class="text-sm font-medium uppercase tracking-wide text-violet-soft">Annuel · recommandé</span><h3 class="font-display mt-1 text-2xl font-semibold">L'année complète</h3></div>
+        <div class="flex items-baseline gap-1 border-t border-white/15 pt-6 font-display"><span class="text-6xl font-semibold">299</span><span class="text-2xl font-semibold">,99€</span><span class="ml-2 self-end pb-2 text-sm text-white/60">/ an</span></div>
+        <p class="text-sm text-white/70"><strong class="text-white">Création offerte</strong>, soit ≈ <strong class="text-white">25€/mois</strong>, tout inclus.</p>
+        <ul class="flex flex-col gap-3 text-[15px]">
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-soft"></span> Tout du plan mensuel</li>
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-soft"></span> <strong>Création offerte</strong></li>
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-soft"></span> Économie de 79,87€/an</li>
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-soft"></span> Mises à jour prioritaires</li>
+          <li class="flex gap-3"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-soft"></span> Support prioritaire en français</li>
+        </ul>
+        <a href="https://fidelicard-production.up.railway.app" class="btn group mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet to-violet-soft px-6 py-3.5 text-center font-medium text-white shadow-orb hover:-translate-y-0.5 hover:from-violet-deep hover:to-violet">Choisir l'annuel <span class="arr">→</span></a>
       </article>
     </div>
+    <p class="reveal mt-8 text-center text-sm text-faint">Sans engagement · annulez quand vous voulez · paiement Stripe · RGPD, hébergé en UE</p>
   </div>
 </section>
 
-<!-- ====================== PRICING ====================== -->
-<section class="pricing" id="tarifs">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div>
-        <span class="eyebrow"><span class="dot"></span>04 · Tarifs</span>
-      </div>
-      <h2>Deux formules. <span class="accent">Pas</span> de surprise.</h2>
-    </div>
-
-    <div class="price-grid">
-      <article class="plan reveal">
-        <span class="plan-tag">⊙ Mensuel</span>
-        <h3>Au mois le mois</h3>
-        <p class="lede">L'essai sans engagement. Idéal pour tester FidéliCard dans votre commerce.</p>
-
-        <div class="price-block">
-          <span class="price-amount">29</span><span class="price-cur">,99€</span>
-          <span class="price-period">/ mois</span>
-        </div>
-        <div class="price-note">
-          + <b>19,99€</b> de création de carte (unique, à l'inscription).<br/>
-          Résiliable à tout moment.
-        </div>
-
-        <ul>
-          <li>Carte tampons <i>ou</i> points</li>
-          <li>Apple Wallet + Google Wallet</li>
-          <li>QR dynamique anti-fraude</li>
-          <li>Tableau de bord PWA</li>
-          <li>Support en français</li>
-        </ul>
-
-        <div class="plan-cta">
-          <a class="btn btn-ghost-dark" href="https://fidelicard-production.up.railway.app">Choisir le mensuel <span class="arr">→</span></a>
-        </div>
-      </article>
-
-      <article class="plan feature reveal d1">
-        <span class="save-badge">−79,87€ d'éco.</span>
-        <span class="plan-tag">★ Annuel · Recommandé</span>
-        <h3>L'année complète</h3>
-        <p class="lede">Le meilleur tarif. Création de carte offerte, deux mois cadeau sur l'année.</p>
-
-        <div class="price-block">
-          <span class="price-amount">299</span><span class="price-cur">,99€</span>
-          <span class="price-period">/ an</span>
-        </div>
-        <div class="price-note">
-          <b>Création offerte</b> — économie de 19,99€.<br/>
-          Soit <b>≈ 25€/mois</b>, tout inclus.
-        </div>
-
-        <ul>
-          <li>Tout du plan mensuel</li>
-          <li><b>Création de carte offerte</b></li>
-          <li>Économie totale de <b>79,87€/an</b></li>
-          <li>Mises à jour prioritaires</li>
-          <li>Support prioritaire en français</li>
-        </ul>
-
-        <div class="plan-cta">
-          <a class="btn btn-brand" href="https://fidelicard-production.up.railway.app">Choisir l'annuel <span class="arr">→</span></a>
-        </div>
-      </article>
-    </div>
-
-    <div class="reveal" style="margin-top:30px;text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--muted);display:flex;gap:10px 20px;justify-content:center;flex-wrap:wrap">
-      <span>✓ Sans engagement</span>
-      <span>✓ Annulez à tout moment</span>
-      <span>✓ Paiement sécurisé via Stripe</span>
-      <span>✓ Conforme RGPD · hébergé en UE</span>
-    </div>
+<!-- ============================== FAQ ============================== -->
+<section id="faq" class="mx-auto max-w-content px-6 py-24 md:py-32">
+  <div class="reveal mx-auto mb-12 max-w-2xl text-center">
+    <span class="text-sm font-medium uppercase tracking-[0.16em] text-violet">Questions</span>
+    <h2 class="font-display mt-4 text-[clamp(2.2rem,4.6vw,3.6rem)] font-semibold leading-[1.04]">Les réponses, avant vos questions.</h2>
+  </div>
+  <div class="mx-auto flex max-w-3xl flex-col gap-3">
+    <details class="faq reveal rounded-2xl border bg-white/70 px-6 backdrop-blur open:bg-white">
+      <summary class="flex items-center justify-between gap-4 py-5 font-display text-lg font-semibold">Mes clients doivent-ils installer une application ?<span class="pm text-violet">+</span></summary>
+      <p class="pb-5 leading-relaxed text-muted">Non. La carte s'ajoute à Apple ou Google Wallet en un tap, ou s'ouvre via un lien. Aucune application côté client.</p>
+    </details>
+    <details class="faq reveal rounded-2xl border bg-white/70 px-6 backdrop-blur open:bg-white">
+      <summary class="flex items-center justify-between gap-4 py-5 font-display text-lg font-semibold">Comment fonctionne l'anti-fraude ?<span class="pm text-violet">+</span></summary>
+      <p class="pb-5 leading-relaxed text-muted">Un QR unique qui se régénère toutes les 30 secondes (TOTP), à usage unique, avec un délai mini entre deux scans. Une capture devient inutilisable.</p>
+    </details>
+    <details class="faq reveal rounded-2xl border bg-white/70 px-6 backdrop-blur open:bg-white">
+      <summary class="flex items-center justify-between gap-4 py-5 font-display text-lg font-semibold">Puis-je modifier mes récompenses après le lancement ?<span class="pm text-violet">+</span></summary>
+      <p class="pb-5 leading-relaxed text-muted">Oui, à tout moment depuis le tableau de bord. Les changements s'appliquent instantanément, sans perdre la progression de vos clients.</p>
+    </details>
+    <details class="faq reveal rounded-2xl border bg-white/70 px-6 backdrop-blur open:bg-white">
+      <summary class="flex items-center justify-between gap-4 py-5 font-display text-lg font-semibold">Comment se passe le paiement ?<span class="pm text-violet">+</span></summary>
+      <p class="pb-5 leading-relaxed text-muted">Par carte via Stripe. Mensuel sans engagement ou annuel avantageux, résiliable quand vous voulez. Factures dans votre espace.</p>
+    </details>
+    <details class="faq reveal rounded-2xl border bg-white/70 px-6 backdrop-blur open:bg-white">
+      <summary class="flex items-center justify-between gap-4 py-5 font-display text-lg font-semibold">Mes données sont-elles protégées ?<span class="pm text-violet">+</span></summary>
+      <p class="pb-5 leading-relaxed text-muted">Oui. Hébergement en Europe, conformité RGPD, export ou suppression possibles à la demande depuis l'interface.</p>
+    </details>
+    <details class="faq reveal rounded-2xl border bg-white/70 px-6 backdrop-blur open:bg-white">
+      <summary class="flex items-center justify-between gap-4 py-5 font-display text-lg font-semibold">Combien de temps pour démarrer ?<span class="pm text-violet">+</span></summary>
+      <p class="pb-5 leading-relaxed text-muted">Environ 10 minutes : créez la carte, partagez le lien ou le QR, scannez dès la première visite. Aucune CB requise.</p>
+    </details>
   </div>
 </section>
 
-<style>
-  .faq{padding:clamp(60px,8vw,110px) 0;background:var(--bg)}
-  .faq-list{max-width:820px;margin:44px auto 0;display:flex;flex-direction:column;gap:12px}
-  .faq-item{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:0 24px;transition:border-color .2s ease}
-  .faq-item[open]{border-color:rgba(91,79,233,.35)}
-  .faq-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:21px 0;font-family:var(--display);font-weight:600;font-size:clamp(15px,1.6vw,18px);color:var(--ink)}
-  .faq-item summary::-webkit-details-marker{display:none}
-  .faq-ic{flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-size:19px;line-height:1;transition:transform .25s ease}
-  .faq-item[open] .faq-ic{transform:rotate(45deg)}
-  .faq-a{color:var(--muted);font-size:15px;line-height:1.66;padding:0 0 23px;max-width:700px}
-</style>
-<!-- ====================== FAQ ====================== -->
-<section class="faq" id="faq">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div>
-        <span class="eyebrow"><span class="dot"></span>05 · Questions</span>
-      </div>
-      <h2>Les réponses, <span class="accent">avant</span> vos questions.</h2>
-    </div>
-
-    <div class="faq-list">
-      <details class="faq-item reveal">
-        <summary>Mes clients doivent-ils installer une application&nbsp;?<span class="faq-ic">+</span></summary>
-        <div class="faq-a">Non. La carte s'ajoute à Apple Wallet ou Google Wallet en un tap, ou s'ouvre via un simple lien. Aucune application à télécharger côté client.</div>
-      </details>
-      <details class="faq-item reveal">
-        <summary>Comment fonctionne l'anti-fraude&nbsp;?<span class="faq-ic">+</span></summary>
-        <div class="faq-a">Chaque client dispose d'un QR code unique qui se régénère toutes les 30 secondes (TOTP), à usage unique, avec un délai minimum entre deux scans. Une capture d'écran devient inutilisable : impossible à copier ou à rejouer.</div>
-      </details>
-      <details class="faq-item reveal">
-        <summary>Puis-je modifier mes récompenses après le lancement&nbsp;?<span class="faq-ic">+</span></summary>
-        <div class="faq-a">Oui, à tout moment depuis votre tableau de bord. Les changements (récompense, nombre de tampons, paliers de points, design) s'appliquent instantanément à toutes les cartes de vos clients — sans perdre leur progression.</div>
-      </details>
-      <details class="faq-item reveal">
-        <summary>Comment se passe le paiement&nbsp;?<span class="faq-ic">+</span></summary>
-        <div class="faq-a">Paiement sécurisé par carte via Stripe. Formule mensuelle sans engagement ou annuelle avantageuse, résiliable quand vous le souhaitez. Vos factures sont disponibles dans votre espace.</div>
-      </details>
-      <details class="faq-item reveal">
-        <summary>Mes données et celles de mes clients sont-elles protégées&nbsp;?<span class="faq-ic">+</span></summary>
-        <div class="faq-a">Oui. Hébergement en Europe, conformité RGPD, et export ou suppression des données possibles à la demande directement depuis l'interface.</div>
-      </details>
-      <details class="faq-item reveal">
-        <summary>Combien de temps pour démarrer&nbsp;?<span class="faq-ic">+</span></summary>
-        <div class="faq-a">Environ 10 minutes : créez votre carte, partagez le lien ou le QR à vos clients, et scannez dès la première visite. Aucune carte bancaire requise pour configurer.</div>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- ====================== CTA FINAL ====================== -->
-<section class="cta-final">
-  <div class="wrap">
-    <div class="cta-box reveal">
-      <div>
-        <span class="eyebrow dark"><span class="dot"></span>Prêt à lancer&nbsp;?</span>
-        <h2 style="margin-top:18px">Votre carte de fidélité.<br/><span class="accent">Lancée</span> cet après-midi.</h2>
-        <p>Configurez votre programme en moins de 10 minutes, partagez le lien à vos clients dès ce soir. Notre équipe répond en français en moins d'une journée ouvrée.</p>
-      </div>
-      <div class="cta-actions">
-        <a class="btn btn-brand" href="https://fidelicard-production.up.railway.app">Créer mon compte <span class="arr">→</span></a>
-        <a class="btn btn-ghost-dark" href="mailto:fidelicard.support@gmail.com">Parler à un humain</a>
+<!-- ============================== CTA ============================== -->
+<section class="px-6 pb-24">
+  <div class="mx-auto max-w-content">
+    <div class="reveal relative overflow-hidden rounded-[40px] bg-gradient-to-br from-violet to-[#4A3FB8] px-8 py-20 text-center text-white shadow-float md:px-16">
+      <div class="orb absolute -right-10 -top-10 h-44 w-44 opacity-90"></div>
+      <div class="orb absolute -bottom-12 -left-8 h-28 w-28 opacity-80"></div>
+      <div class="relative">
+        <h2 class="font-display mx-auto max-w-2xl text-[clamp(2.2rem,5vw,4rem)] font-semibold leading-[0.98]">Votre carte, lancée cet après-midi.</h2>
+        <p class="mx-auto mt-5 max-w-md text-white/80">Configurez votre programme en moins de 10 minutes, partagez le lien dès ce soir. On répond en français en moins d'une journée ouvrée.</p>
+        <div class="mt-9 flex flex-wrap justify-center gap-3">
+          <a href="https://fidelicard-production.up.railway.app" class="btn inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-medium text-violet hover:-translate-y-0.5">Créer mon compte <span class="arr">→</span></a>
+          <a href="mailto:fidelicard.support@gmail.com" class="btn inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-4 font-medium text-white hover:bg-white/10">Parler à un humain</a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ====================== FOOTER ====================== -->
-<footer>
-  <div class="wrap">
-    <div class="foot-grid">
+<!-- ============================== FOOTER ============================== -->
+<footer class="border-t px-6 py-14">
+  <div class="mx-auto max-w-content">
+    <div class="grid gap-10 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
       <div>
-        <div class="foot-brand">
-          <span class="brand-mark">F</span>
-          FidéliCard
-        </div>
-        <p class="foot-tag">La fidélité numérique pour les commerçants locaux. Conçu en Belgique, hébergé en Europe, parlé en français.</p>
+        <div class="flex items-center gap-2.5"><span class="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-violet to-violet-soft text-sm font-semibold text-white">F</span><span class="font-display text-lg font-semibold">FidéliCard</span></div>
+        <p class="mt-4 max-w-xs leading-relaxed text-muted">La fidélité native dans le téléphone. Conçue en Belgique, hébergée en Europe, parlée en français.</p>
       </div>
-      <div>
-        <h4>Produit</h4>
-        <ul>
-          <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-          <li><a href="#comment">Comment ça marche</a></li>
-          <li><a href="#wallets">Wallets</a></li>
-          <li><a href="#tarifs">Tarifs</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Entreprise</h4>
-        <ul>
-          <li><a href="mailto:fidelicard.support@gmail.com">Contact</a></li>
-          <li><a href="https://fidelicard-production.up.railway.app">Se connecter</a></li>
-          <li><a href="#">Conditions générales</a></li>
-          <li><a href="#">Confidentialité</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Support</h4>
-        <ul>
-          <li><a href="mailto:fidelicard.support@gmail.com">fidelicard.support@gmail.com</a></li>
-          <li><a href="#">Centre d'aide</a></li>
-          <li><a href="#">RGPD</a></li>
-        </ul>
-      </div>
+      <div><h4 class="text-sm font-semibold uppercase tracking-wide text-faint">Produit</h4><ul class="mt-4 flex flex-col gap-2.5 text-sm text-muted"><li><a href="#produit" class="hover:text-violet">Fonctionnalités</a></li><li><a href="#tarifs" class="hover:text-violet">Tarifs</a></li><li><a href="#faq" class="hover:text-violet">FAQ</a></li></ul></div>
+      <div><h4 class="text-sm font-semibold uppercase tracking-wide text-faint">Maison</h4><ul class="mt-4 flex flex-col gap-2.5 text-sm text-muted"><li><a href="mailto:fidelicard.support@gmail.com" class="hover:text-violet">Contact</a></li><li><a href="https://fidelicard-production.up.railway.app" class="hover:text-violet">Se connecter</a></li><li><a href="#" class="hover:text-violet">Confidentialité</a></li></ul></div>
+      <div><h4 class="text-sm font-semibold uppercase tracking-wide text-faint">Support</h4><ul class="mt-4 flex flex-col gap-2.5 text-sm text-muted"><li><a href="mailto:fidelicard.support@gmail.com" class="hover:text-violet">fidelicard.support@gmail.com</a></li><li><a href="#" class="hover:text-violet">RGPD</a></li></ul></div>
     </div>
-    <div class="foot-legal">
-      <span>© 2026 FidéliCard · Belgique</span>
-      <span>Apple Wallet® et Google Wallet™ sont des marques de leurs propriétaires respectifs.</span>
+    <div class="mt-12 flex flex-col items-start justify-between gap-2 border-t pt-6 text-sm text-faint sm:flex-row sm:items-center">
+      <span>© <span id="year">2026</span> FidéliCard · Belgique</span>
+      <span>Apple Wallet® · Google Wallet™, marques de leurs propriétaires</span>
     </div>
   </div>
 </footer>
 
-<!-- GSAP + ScrollTrigger -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
 <script>
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---------- Split headlines into words (stagger reveal) ----------
-  document.querySelectorAll('.hero h1, .section-head h2, .cta-box h2').forEach(el => {
-    let wordIdx = 0;
-    const walk = (node) => {
-      const kids = Array.from(node.childNodes);
-      kids.forEach(child => {
-        if (child.nodeType === 3) {
-          const frag = document.createDocumentFragment();
-          child.textContent.split(/(\s+)/).forEach(word => {
-            if (!word.trim()) { frag.appendChild(document.createTextNode(word)); return; }
-            const s = document.createElement('span');
-            s.className = 'split-word';
-            s.style.transitionDelay = (wordIdx * 0.04) + 's';
-            s.textContent = word;
-            wordIdx++;
-            frag.appendChild(s);
-          });
-          node.replaceChild(frag, child);
-        } else if (child.nodeType === 1 && !child.classList.contains('split-word')) {
-          // Preserve gradient/accent spans as single animated units (don't split inside)
-          if (child.classList.contains('grad') || child.classList.contains('accent')) {
-            child.classList.add('split-word');
-            child.style.transitionDelay = (wordIdx * 0.04) + 's';
-            wordIdx++;
-          } else {
-            walk(child);
-          }
-        }
-      });
-    };
-    walk(el);
-  });
+  // Apparition au scroll
+  const io = new IntersectionObserver((es) => {
+    es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // ---------- Reveal (IntersectionObserver fallback) ----------
-  // GSAP/ScrollTrigger takes over the block reveals when available (see bottom).
-  // This IO stays as a safety net if the GSAP CDN fails to load, or for reduced motion.
-  const useGsapReveal = !!(window.gsap && window.ScrollTrigger) && !prefersReduced;
-  if (!useGsapReveal) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
-          e.target.querySelectorAll('.split-word').forEach(w => w.classList.add('in'));
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-  }
-
-  // Also reveal split words in non-.reveal headlines (the hero h1 already has .reveal)
-  const splitIO = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.querySelectorAll('.split-word').forEach(w => w.classList.add('in'));
-        splitIO.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.3 });
-  document.querySelectorAll('.hero h1, .section-head h2, .cta-box h2').forEach(el => splitIO.observe(el));
-
-  // ---------- Cursor blob ----------
-  if (!isCoarse && !prefersReduced) {
-    const blob = document.querySelector('.cursor-blob');
-    if (blob) {
-      let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-      let bx = mx, by = my;
-      let active = false;
-      window.addEventListener('mousemove', e => {
-        mx = e.clientX; my = e.clientY;
-        if (!active) { active = true; blob.classList.add('active'); }
-      }, { passive: true });
-      window.addEventListener('mouseleave', () => { blob.classList.remove('active'); active = false; });
-      (function loop() {
-        bx += (mx - bx) * 0.12;
-        by += (my - by) * 0.12;
-        blob.style.transform = `translate(${bx}px, ${by}px) translate(-50%, -50%)`;
-        requestAnimationFrame(loop);
-      })();
-    }
-  }
-
-  // ---------- Card 3D tilt ----------
-  if (!isCoarse && !prefersReduced) {
-    const tiltCards = document.querySelectorAll('.feat, .how-card, .plan');
-    tiltCards.forEach(card => {
-      let rafId = null, tx = 0, ty = 0;
-      const apply = () => {
-        card.style.transform = `perspective(1100px) rotateY(${tx}deg) rotateX(${ty}deg) translateY(-3px)`;
-        rafId = null;
-      };
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-        tx = px * 6; ty = -py * 6;
-        if (!rafId) rafId = requestAnimationFrame(apply);
-      }, { passive: true });
-      card.addEventListener('mouseleave', () => {
-        tx = 0; ty = 0;
-        card.style.transform = '';
-      });
-    });
-  }
-
-  // ---------- Magnetic buttons ----------
-  if (!isCoarse && !prefersReduced) {
-    const magBtns = document.querySelectorAll('.btn-brand, .btn-ink, .hero-ctas .btn');
-    magBtns.forEach(btn => {
-      btn.addEventListener('mousemove', e => {
-        const r = btn.getBoundingClientRect();
-        const x = e.clientX - r.left - r.width / 2;
-        const y = e.clientY - r.top - r.height / 2;
-        btn.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
-      }, { passive: true });
-      btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
-    });
-  }
-
-  // ---------- Build QR ----------
+  // Parallaxe 3D du hero (souris)
   (function(){
-    const grid = document.getElementById('qrGrid');
-    if (!grid) return;
-    const N = 11;
-    let seed = 11;
-    const rand = () => { seed = (seed * 9301 + 49297) % 233280; return seed/233280; };
-    let html = '';
-    for (let y=0; y<N; y++){
-      for (let x=0; x<N; x++){
-        const inCorner = (cx, cy) => x>=cx && x<cx+3 && y>=cy && y<cy+3;
-        const corner = inCorner(0,0) || inCorner(N-3,0) || inCorner(0,N-3);
-        const isCornerFill = corner && !(x>0 && x<2 && y>0 && y<2)
-                                     && !(x>N-3 && x<N-1 && y>0 && y<2)
-                                     && !(x>0 && x<2 && y>N-3 && y<N-1);
-        const on = corner ? isCornerFill : rand() > 0.55;
-        html += `<i class="${on ? '' : 'o'}"></i>`;
-      }
-    }
-    grid.innerHTML = html;
+    const scene = document.getElementById('scene');
+    const phone = document.getElementById('phone');
+    if (!scene || !phone || reduce || !window.matchMedia('(pointer:fine)').matches) return;
+    const chips = [...scene.querySelectorAll('.chip')];
+    let raf = null, tx = -16, ty = 7;
+    scene.addEventListener('mousemove', (e) => {
+      const r = scene.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      tx = -16 + px * 18; ty = 7 - py * 14;
+      if (!raf) raf = requestAnimationFrame(() => {
+        phone.style.setProperty('--rx', ty.toFixed(2)+'deg');
+        phone.style.setProperty('--ry', tx.toFixed(2)+'deg');
+        chips.forEach(c => {
+          const z = parseFloat(getComputedStyle(c).getPropertyValue('--z')) || 60;
+          const f = z / 30;
+          c.style.setProperty('--px', (px * f * 6).toFixed(1)+'px');
+          c.style.setProperty('--py', (py * f * 6).toFixed(1)+'px');
+        });
+        raf = null;
+      });
+    });
+    scene.addEventListener('mouseleave', () => { phone.style.setProperty('--rx','7deg'); phone.style.setProperty('--ry','-16deg'); });
   })();
 
-  // ---------- TOTP-ish live countdown ----------
+  // TOTP live
   (function(){
     const PERIOD = 30;
-    const ring = document.getElementById('qrRing');
-    const qrSec = document.getElementById('qrSec');
-    const codeEl = document.getElementById('totpCode');
-    const secEl  = document.getElementById('totpSec');
-    const barEl  = document.getElementById('totpBar');
-    let lastCycle = -1;
-    function randCode(){
-      const n = Math.floor(Math.random()*1e6).toString().padStart(6,'0');
-      return n.slice(0,3).split('').join(' ') + ' · ' + n.slice(3).split('').join(' ');
-    }
+    const code = document.getElementById('totp'), sec = document.getElementById('totpSec'), bar = document.getElementById('totpBar');
+    let last = -1;
+    const rnd = () => { const n = Math.floor(Math.random()*1e6).toString().padStart(6,'0'); return n.slice(0,3).split('').join(' ')+' · '+n.slice(3).split('').join(' '); };
     function tick(){
-      const t = Math.floor(Date.now()/1000) % PERIOD;
-      const cycle = Math.floor(Date.now()/1000/PERIOD);
-      const remaining = PERIOD - t;
-      if (cycle !== lastCycle){
-        if (codeEl) codeEl.textContent = randCode();
-        lastCycle = cycle;
-      }
-      if (ring)  ring.style.setProperty('--p', (t/PERIOD*360)+'deg');
-      if (qrSec) qrSec.textContent = remaining + 's';
-      if (secEl) secEl.textContent = remaining + 's';
-      if (barEl) barEl.style.width = (remaining/PERIOD*100) + '%';
+      const t = Math.floor(Date.now()/1000) % PERIOD, cyc = Math.floor(Date.now()/1000/PERIOD), left = PERIOD - t;
+      if (cyc !== last){ if (code) code.textContent = rnd(); last = cyc; }
+      if (sec) sec.textContent = left; if (bar) bar.style.width = (left/PERIOD*100)+'%';
     }
     tick(); setInterval(tick, 1000);
   })();
 
-  // ========================================================
-  // GSAP ScrollTrigger enhancements
-  // ========================================================
-  (function(){
-    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
-    gsap.registerPlugin(ScrollTrigger);
-    document.documentElement.classList.add('gsap-on');
-
-    // 1) Scroll progress bar — scrubbed to whole-page scroll
-    const bar = document.querySelector('.scroll-progress');
-    if (bar){
-      gsap.to(bar, {
-        scaleX: 1, ease: 'none',
-        scrollTrigger: { start: 0, end: 'max', scrub: 0.3 }
-      });
-    }
-
-    // 2) Staggered reveals via ScrollTrigger.batch() (replaces the IO fades)
-    gsap.set('.reveal', { opacity: 0, y: 34, filter: 'blur(12px)' });
-    ScrollTrigger.batch('.reveal', {
-      start: 'top 86%',
-      once: true,
-      onEnter: (batch) => gsap.to(batch, {
-        opacity: 1, y: 0, filter: 'blur(0px)',
-        duration: 0.9, ease: 'power3.out', stagger: 0.09, overwrite: true
-      })
-    });
-
-    // 3) Hero parallax — phones, aurora and copy drift at different rates (scrubbed)
-    const heroST = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 };
-    const scene  = document.querySelector('.phones-scene');
-    const aurora = document.querySelector('.hero-aurora');
-    const copy   = document.querySelector('.hero-grid > div:first-child');
-    if (scene)  gsap.to(scene,  { yPercent: 14, ease: 'none', scrollTrigger: heroST });
-    if (aurora) gsap.to(aurora, { yPercent: 26, ease: 'none', scrollTrigger: heroST });
-    if (copy)   gsap.to(copy,   { yPercent: -7, opacity: 0.55, ease: 'none', scrollTrigger: heroST });
-
-    // 4) Velocity-reactive marquee — speeds up with scroll velocity, eases back to idle
-    const track = document.querySelector('.marquee-track');
-    if (track){
-      track.style.animation = 'none';
-      const loop = gsap.to(track, { xPercent: -50, repeat: -1, ease: 'none', duration: 32 });
-      let reset;
-      ScrollTrigger.create({
-        start: 0, end: 'max',
-        onUpdate: (self) => {
-          const factor = 1 + Math.min(Math.abs(self.getVelocity()) / 180, 6);
-          gsap.to(loop, { timeScale: factor, duration: 0.25, overwrite: true });
-          if (reset) reset.kill();
-          reset = gsap.delayedCall(0.4, () => gsap.to(loop, { timeScale: 1, duration: 0.8 }));
-        }
-      });
-    }
-
-    // 5) Hand-drawn underlines that "draw" themselves under accent words on scroll
-    const NS = 'http://www.w3.org/2000/svg';
-    const squiggle = 'M3 11 C 40 3, 72 15, 104 8 S 170 3, 205 10';
-    document.querySelectorAll('.section-head h2 .accent, .hero h1 .grad').forEach((el) => {
-      el.classList.add('hand-underline');
-      const svg = document.createElementNS(NS, 'svg');
-      svg.setAttribute('viewBox', '0 0 208 16');
-      svg.setAttribute('preserveAspectRatio', 'none');
-      svg.setAttribute('aria-hidden', 'true');
-      const path = document.createElementNS(NS, 'path');
-      path.setAttribute('d', squiggle);
-      path.style.vectorEffect = 'non-scaling-stroke';
-      svg.appendChild(path);
-      el.appendChild(svg);
-      const len = path.getTotalLength();
-      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-      gsap.to(path, {
-        strokeDashoffset: 0, duration: 0.9, ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true }
-      });
-    });
-
-    // 6) Price count-up when the pricing section scrolls into view
-    document.querySelectorAll('.price-amount').forEach((el) => {
-      const end = parseInt(el.textContent.replace(/\D/g, ''), 10);
-      if (!end) return;
-      const counter = { v: 0 };
-      el.textContent = '0';
-      gsap.to(counter, {
-        v: end, duration: 1.1, ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-        onUpdate: () => { el.textContent = Math.round(counter.v); }
-      });
-    });
-
-    // 7) Loyalty stamps fill in one-by-one when their card scrolls into view
-    gsap.utils.toArray('.feat .mini-stamps, .mini-card-in .mc-stamps').forEach((group) => {
-      const fills = group.querySelectorAll('i.f');
-      if (!fills.length) return;
-      gsap.from(fills, {
-        scale: 0, opacity: 0, transformOrigin: 'center center',
-        duration: 0.5, ease: 'back.out(2)', stagger: 0.08,
-        scrollTrigger: { trigger: group, start: 'top 90%', once: true }
-      });
-    });
-
-    // 8) "How it works" — step numbers spring in, tails slide up
-    gsap.utils.toArray('.how-card').forEach((card) => {
-      const n = card.querySelector('.step-num .n');
-      const tail = card.querySelector('.step-tail');
-      const st = { trigger: card, start: 'top 82%', once: true };
-      if (n)    gsap.from(n,    { scale: 0, rotate: -35, duration: 0.6, ease: 'back.out(1.7)', scrollTrigger: st });
-      if (tail) gsap.from(tail, { y: 12, opacity: 0, duration: 0.5, ease: 'power2.out', delay: 0.15, scrollTrigger: st });
-    });
-
-    // 9) Discount badge pops in when pricing appears
-    const badge = document.querySelector('.save-badge');
-    if (badge) gsap.from(badge, {
-      scale: 0, rotate: -12, duration: 0.6, ease: 'back.out(2.2)',
-      scrollTrigger: { trigger: '.pricing', start: 'top 65%', once: true }
-    });
-
-    // Recalculate trigger positions once webfonts finish loading (avoids layout shift)
-    if (document.fonts && document.fonts.ready){
-      document.fonts.ready.then(() => ScrollTrigger.refresh());
-    }
-  })();
+  document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 
 </body>
