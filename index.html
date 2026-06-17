@@ -1360,6 +1360,34 @@ footer a:hover{color:var(--brand)}
   .reveal{opacity:1;transform:none}
 }
 
+/* =========================================================
+   GSAP — scroll progress + reveal handoff
+   ========================================================= */
+.scroll-progress{
+  position:fixed;left:0;top:0;height:3px;width:100%;
+  transform:scaleX(0);transform-origin:0 50%;
+  background:linear-gradient(90deg,var(--brand) 0%,#8C82FF 55%,var(--amber) 100%);
+  box-shadow:0 0 12px rgba(91,79,233,.5);
+  z-index:10000;pointer-events:none;
+}
+/* When GSAP drives the reveals, disable the CSS transition so the two don't fight */
+.gsap-on .reveal{transition:none}
+@media (prefers-reduced-motion: reduce){ .scroll-progress{display:none} }
+
+/* =========================================================
+   Hand-drawn underline (humanising accent)
+   ========================================================= */
+.hand-underline{position:relative;display:inline-block}
+.hand-underline > svg{
+  position:absolute;left:-3%;bottom:-.16em;width:106%;height:.42em;
+  overflow:visible;pointer-events:none;
+}
+.hand-underline > svg path{
+  fill:none;stroke:var(--brand);stroke-width:3.4;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.hero h1 .hand-underline > svg path{stroke:var(--amber);stroke-width:4}
+
 /* ========================================================
    Mobile responsive
    ======================================================== */
@@ -1444,6 +1472,9 @@ footer a:hover{color:var(--brand)}
 
 <!-- Cursor blob follower -->
 <div class="cursor-blob" aria-hidden="true"></div>
+
+<!-- Scroll progress bar (GSAP-driven) -->
+<div class="scroll-progress" aria-hidden="true"></div>
 
 <!-- Grain texture overlay -->
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -2082,6 +2113,10 @@ footer a:hover{color:var(--brand)}
   </div>
 </footer>
 
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
 <script>
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isCoarse = window.matchMedia('(pointer: coarse)').matches;
@@ -2119,17 +2154,22 @@ footer a:hover{color:var(--brand)}
     walk(el);
   });
 
-  // ---------- Reveal ----------
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        e.target.querySelectorAll('.split-word').forEach(w => w.classList.add('in'));
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  // ---------- Reveal (IntersectionObserver fallback) ----------
+  // GSAP/ScrollTrigger takes over the block reveals when available (see bottom).
+  // This IO stays as a safety net if the GSAP CDN fails to load, or for reduced motion.
+  const useGsapReveal = !!(window.gsap && window.ScrollTrigger) && !prefersReduced;
+  if (!useGsapReveal) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          e.target.querySelectorAll('.split-word').forEach(w => w.classList.add('in'));
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  }
 
   // Also reveal split words in non-.reveal headlines (the hero h1 already has .reveal)
   const splitIO = new IntersectionObserver((entries) => {
@@ -2249,6 +2289,128 @@ footer a:hover{color:var(--brand)}
       if (barEl) barEl.style.width = (remaining/PERIOD*100) + '%';
     }
     tick(); setInterval(tick, 1000);
+  })();
+
+  // ========================================================
+  // GSAP ScrollTrigger enhancements
+  // ========================================================
+  (function(){
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    gsap.registerPlugin(ScrollTrigger);
+    document.documentElement.classList.add('gsap-on');
+
+    // 1) Scroll progress bar — scrubbed to whole-page scroll
+    const bar = document.querySelector('.scroll-progress');
+    if (bar){
+      gsap.to(bar, {
+        scaleX: 1, ease: 'none',
+        scrollTrigger: { start: 0, end: 'max', scrub: 0.3 }
+      });
+    }
+
+    // 2) Staggered reveals via ScrollTrigger.batch() (replaces the IO fades)
+    gsap.set('.reveal', { opacity: 0, y: 34, filter: 'blur(12px)' });
+    ScrollTrigger.batch('.reveal', {
+      start: 'top 86%',
+      once: true,
+      onEnter: (batch) => gsap.to(batch, {
+        opacity: 1, y: 0, filter: 'blur(0px)',
+        duration: 0.9, ease: 'power3.out', stagger: 0.09, overwrite: true
+      })
+    });
+
+    // 3) Hero parallax — phones, aurora and copy drift at different rates (scrubbed)
+    const heroST = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 };
+    const scene  = document.querySelector('.phones-scene');
+    const aurora = document.querySelector('.hero-aurora');
+    const copy   = document.querySelector('.hero-grid > div:first-child');
+    if (scene)  gsap.to(scene,  { yPercent: 14, ease: 'none', scrollTrigger: heroST });
+    if (aurora) gsap.to(aurora, { yPercent: 26, ease: 'none', scrollTrigger: heroST });
+    if (copy)   gsap.to(copy,   { yPercent: -7, opacity: 0.55, ease: 'none', scrollTrigger: heroST });
+
+    // 4) Velocity-reactive marquee — speeds up with scroll velocity, eases back to idle
+    const track = document.querySelector('.marquee-track');
+    if (track){
+      track.style.animation = 'none';
+      const loop = gsap.to(track, { xPercent: -50, repeat: -1, ease: 'none', duration: 32 });
+      let reset;
+      ScrollTrigger.create({
+        start: 0, end: 'max',
+        onUpdate: (self) => {
+          const factor = 1 + Math.min(Math.abs(self.getVelocity()) / 180, 6);
+          gsap.to(loop, { timeScale: factor, duration: 0.25, overwrite: true });
+          if (reset) reset.kill();
+          reset = gsap.delayedCall(0.4, () => gsap.to(loop, { timeScale: 1, duration: 0.8 }));
+        }
+      });
+    }
+
+    // 5) Hand-drawn underlines that "draw" themselves under accent words on scroll
+    const NS = 'http://www.w3.org/2000/svg';
+    const squiggle = 'M3 11 C 40 3, 72 15, 104 8 S 170 3, 205 10';
+    document.querySelectorAll('.section-head h2 .accent, .hero h1 .grad').forEach((el) => {
+      el.classList.add('hand-underline');
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('viewBox', '0 0 208 16');
+      svg.setAttribute('preserveAspectRatio', 'none');
+      svg.setAttribute('aria-hidden', 'true');
+      const path = document.createElementNS(NS, 'path');
+      path.setAttribute('d', squiggle);
+      path.style.vectorEffect = 'non-scaling-stroke';
+      svg.appendChild(path);
+      el.appendChild(svg);
+      const len = path.getTotalLength();
+      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+      gsap.to(path, {
+        strokeDashoffset: 0, duration: 0.9, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+      });
+    });
+
+    // 6) Price count-up when the pricing section scrolls into view
+    document.querySelectorAll('.price-amount').forEach((el) => {
+      const end = parseInt(el.textContent.replace(/\D/g, ''), 10);
+      if (!end) return;
+      const counter = { v: 0 };
+      el.textContent = '0';
+      gsap.to(counter, {
+        v: end, duration: 1.1, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+        onUpdate: () => { el.textContent = Math.round(counter.v); }
+      });
+    });
+
+    // 7) Loyalty stamps fill in one-by-one when their card scrolls into view
+    gsap.utils.toArray('.feat .mini-stamps, .mini-card-in .mc-stamps').forEach((group) => {
+      const fills = group.querySelectorAll('i.f');
+      if (!fills.length) return;
+      gsap.from(fills, {
+        scale: 0, opacity: 0, transformOrigin: 'center center',
+        duration: 0.5, ease: 'back.out(2)', stagger: 0.08,
+        scrollTrigger: { trigger: group, start: 'top 90%', once: true }
+      });
+    });
+
+    // 8) "How it works" — step numbers spring in, tails slide up
+    gsap.utils.toArray('.how-card').forEach((card) => {
+      const n = card.querySelector('.step-num .n');
+      const tail = card.querySelector('.step-tail');
+      const st = { trigger: card, start: 'top 82%', once: true };
+      if (n)    gsap.from(n,    { scale: 0, rotate: -35, duration: 0.6, ease: 'back.out(1.7)', scrollTrigger: st });
+      if (tail) gsap.from(tail, { y: 12, opacity: 0, duration: 0.5, ease: 'power2.out', delay: 0.15, scrollTrigger: st });
+    });
+
+    // 9) Discount badge pops in when pricing appears
+    const badge = document.querySelector('.save-badge');
+    if (badge) gsap.from(badge, {
+      scale: 0, rotate: -12, duration: 0.6, ease: 'back.out(2.2)',
+      scrollTrigger: { trigger: '.pricing', start: 'top 65%', once: true }
+    });
+
+    // Recalculate trigger positions once webfonts finish loading (avoids layout shift)
+    if (document.fonts && document.fonts.ready){
+      document.fonts.ready.then(() => ScrollTrigger.refresh());
+    }
   })();
 </script>
 
